@@ -1,7 +1,4 @@
 <resources>
-    <string name="app_name">SupportDifferentDevices</string>
-    <string name="action_settings">Settings</string>
-
     <string name="title">Mon Application</string>
     <string name="hello_world">Bonjour le monde!</string>
 </resources>

@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">SupportDifferentDevices</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name" translatable="false">SupportDifferentDevices</string>
+    <string name="action_settings" translatable="false">Settings</string>
+
+    <string name="dimensions" translatable="false">DIMENSIONS</string>
 
     <string name="title">My application</string>
     <string name="hello_world">Hello World!</string>
