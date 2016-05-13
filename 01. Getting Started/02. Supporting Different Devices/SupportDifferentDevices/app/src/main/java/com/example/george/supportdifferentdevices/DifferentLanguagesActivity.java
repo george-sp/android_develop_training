@@ -5,9 +5,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class DifferentLanguagesActivity extends AppCompatActivity {
 
@@ -26,6 +28,17 @@ public class DifferentLanguagesActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        // Get a string resource from your app's Resources
+        String hello = getResources().getString(R.string.hello_world);
+
+        // Or supply a string resource to a method that requires a string
+        TextView textView = new TextView(this);
+        textView.setText(R.string.hello_world);
+
+        // Get the LinearLayout in which the textView will be added.
+        LinearLayout layout = (LinearLayout) findViewById(R.id.content);
+        layout.addView(textView);
     }
 
     @Override
