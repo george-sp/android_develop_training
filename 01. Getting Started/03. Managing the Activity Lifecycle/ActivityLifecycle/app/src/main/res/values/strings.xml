@@ -2,4 +2,6 @@
     <string name="app_name">ActivityLifecycle</string>
 
     <string name="on_create_message">Make sure the app icon in the action bar does not behave as a button.</string>
+
+    <string name="count_message">Count</string>
 </resources>

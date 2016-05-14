@@ -3,12 +3,11 @@ package com.example.george.activitylifecycle;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.hardware.Camera;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -20,9 +19,28 @@ public class MainActivity extends Activity {
     /* Member variable for text view in the layout. */
     TextView mTextView;
 
+    TextView countTextView;
+    private static final String STATE_SCORE = "playerScore";
+    private static final String STATE_LEVEL = "playerLevel";
+    private int mCurrentScore = 0;
+    private int mCurrentLevel = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Here's how you can restore some state data in onCreate()
+        /*
+        // Check whether we're recreating a previously destroyed instance
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            mCurrentScore = savedInstanceState.getInt(STATE_SCORE);
+            mCurrentLevel = savedInstanceState.getInt(STATE_LEVEL);
+        } else {
+            // Probably initialize members with default values for a new instance
+        }
+        */
 
         // Set the user interface layout for this Activity.
         // The layout files is defined in the project res/layout/activity_main.xml file.
@@ -30,6 +48,8 @@ public class MainActivity extends Activity {
 
         // Initialize member TextView so we can manipulate it later.
         mTextView = (TextView) findViewById(R.id.text_message);
+
+        countTextView = (TextView) findViewById(R.id.text_count);
 
         /*
          * Make sure we're running on Honeycomb or higher to use ActionBar APIs.
@@ -41,7 +61,9 @@ public class MainActivity extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // For the main activity, make sure the app icon in the action bar does not behave as a button.
             ActionBar actionBar = getActionBar();
-            actionBar.setHomeButtonEnabled(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                actionBar.setHomeButtonEnabled(false);
+            }
         }
     }
 
@@ -112,6 +134,7 @@ public class MainActivity extends Activity {
         android.os.Debug.stopMethodTracing();
     }
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private void initializeCamera() {
         mCamera = null;
         try {
@@ -122,6 +145,38 @@ public class MainActivity extends Activity {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putInt(STATE_SCORE, mCurrentScore);
+        savedInstanceState.putInt(STATE_LEVEL, mCurrentLevel);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    /*
+     * Instead of restoring the state during onCreate() you may choose to implement
+     * onRestoreInstanceState(), which the system calls after the onStart() method. The system
+     * calls onRestoreInstanceState() only if there is a saved state to restore,
+     * so you DO NOT
+     * need to check whether the Bundle is null!
+     */
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // Restore state members from saved instance
+        mCurrentScore = savedInstanceState.getInt(STATE_SCORE);
+        mCurrentLevel = savedInstanceState.getInt(STATE_LEVEL);
+
+        countTextView.setText(String.format("%d", mCurrentScore));
+    }
+
+    public void countScore(View view) {
+        mCurrentScore += 1;
+        countTextView.setText(String.format("%d", mCurrentScore));
+    }
 
     /*
     @Override
