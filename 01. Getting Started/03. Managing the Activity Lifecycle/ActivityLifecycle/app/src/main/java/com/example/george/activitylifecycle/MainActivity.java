@@ -3,7 +3,9 @@ package com.example.george.activitylifecycle;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.hardware.Camera;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,6 +50,29 @@ public class MainActivity extends Activity {
     protected void onStart() {
         super.onStart();
         android.os.Debug.startMethodTracing("activity_lifecycle");
+    }
+
+    /*
+     *Here's an implementation of onStop() that saves the contents of a draft note to persistent storage:
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();  // Always call the superclass method first
+
+        // Save the note's current draft, because the activity is stopping
+        // and we want to be sure the current note progress isn't lost.
+     /*
+        ContentValues values = new ContentValues();
+        values.put(NotePad.Notes.COLUMN_NAME_NOTE, getCurrentNoteText());
+        values.put(NotePad.Notes.COLUMN_NAME_TITLE, getCurrentNoteTitle());
+
+        getContentResolver().update(
+                mUri,    // The URI for the note to update.
+                values,  // The map of column names and new values to apply to them.
+                null,    // No SELECT criteria are used.
+                null     // No WHERE columns are used.
+        );
+       */
     }
 
     /*
@@ -97,4 +122,30 @@ public class MainActivity extends Activity {
         }
     }
 
+
+    /*
+    @Override
+    protected void onStart() {
+        super.onStart();  // Always call the superclass method first
+
+        // The activity is either being restarted or started for the first time
+        // so this is where we should make sure that GPS is enabled
+        LocationManager locationManager =
+                (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if (!gpsEnabled) {
+            // Create a dialog here that requests the user to enable GPS, and use an intent
+            // with the android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS action
+            // to take the user to the Settings screen to enable GPS when they click "OK"
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();  // Always call the superclass method first
+
+        // Activity being restarted from stopped state
+    }
+    */
 }
