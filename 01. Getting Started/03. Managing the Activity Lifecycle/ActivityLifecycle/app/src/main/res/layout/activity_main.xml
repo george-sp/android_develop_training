@@ -11,7 +11,9 @@
     tools:context="com.example.george.activitylifecycle.MainActivity">
 
     <TextView
+        android:id="@+id/text_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:textSize="40sp"
+        android:text="@string/on_create_message"/>
 </RelativeLayout>
