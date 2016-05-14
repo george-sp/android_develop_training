@@ -23,4 +23,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void startDifferentPlatformVersions(View view) {
+        Intent intent = new Intent(this, DifferentPlatformVersionsActivity.class);
+        startActivity(intent);
+    }
 }
