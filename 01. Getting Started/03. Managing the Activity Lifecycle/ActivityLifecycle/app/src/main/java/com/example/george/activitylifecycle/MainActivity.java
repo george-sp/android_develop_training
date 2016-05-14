@@ -1,12 +1,19 @@
 package com.example.george.activitylifecycle;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
+
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    Camera mCamera;
 
     /* Member variable for text view in the layout. */
     TextView mTextView;
@@ -36,10 +43,40 @@ public class MainActivity extends Activity {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onStart() {
         super.onStart();
         android.os.Debug.startMethodTracing("activity_lifecycle");
+    }
+
+    /*
+     * The following example of onResume() is the counterpart to the onPause() example above,
+     * so it initializes the camera that's released when the activity pauses.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+
+        // Get the Camera instance as the activity achieves full user focus
+        if (mCamera == null) {
+            initializeCamera(); // Local method to handle camera init
+        }
+    }
+
+    /*
+     * If your application uses the Camera, the onPause() method is a good place to release it.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();  // Always call the superclass method first
+
+        // Release the Camera because we don't need it when paused
+        // and other activities might need to use it.
+        if (mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
     }
 
     @Override
@@ -48,6 +85,16 @@ public class MainActivity extends Activity {
 
         // Stop method tracing that the activity started during onCreate()
         android.os.Debug.stopMethodTracing();
+    }
+
+    private void initializeCamera() {
+        mCamera = null;
+        try {
+            mCamera = Camera.open(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG, "No camera found" + "\n" + e.getMessage());
+        }
     }
 
 }
