@@ -4,6 +4,10 @@
 
     <string name="dimensions" translatable="false">DIMENSIONS</string>
 
+    <string name="btn_languages" translatable="false">Different Languages</string>
+    <string name="btn_screens" translatable="false">Different Screens</string>
+    <string name="btn_platform_versions" translatable="false">Different Platform Versions</string>
+
     <string name="title">My application</string>
     <string name="hello_world">Hello World!</string>
 </resources>
