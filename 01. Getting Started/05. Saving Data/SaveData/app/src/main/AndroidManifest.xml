@@ -15,6 +15,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SaveKeyValueSetsActivity"
+            android:label="@string/key_value_label">
+        </activity>
+        <activity
+            android:name=".LoadKeyValueSetsActivity"
+            android:label="@string/key_value_load_label">
+        </activity>
     </application>
 
 </manifest>
