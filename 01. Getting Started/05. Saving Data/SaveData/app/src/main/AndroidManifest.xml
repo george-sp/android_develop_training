@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.george.savedata">
 
+    <!-- Obtain Permissions for External Storage -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,6 +26,10 @@
         <activity
             android:name=".LoadKeyValueSetsActivity"
             android:label="@string/key_value_load_label">
+        </activity>
+        <activity
+            android:name=".SaveFilesActivity"
+            android:label="@string/file_label">
         </activity>
     </application>
 

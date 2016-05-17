@@ -11,6 +11,7 @@
     <!-- MainActivity -->
     <string name="key_value_label">@string/saving_key_value_sets_button</string>
     <string name="key_value_load_label">@string/loading_key_value_sets_button</string>
+    <string name="file_label">@string/saving_files_button</string>
     <string name="activity_description">This is an Activity!</string>
 
     <!-- Fragment -->
@@ -19,7 +20,14 @@
 
     <!-- Button texts -->
     <string name="saving_key_value_sets_button">Save Key-Value Sets</string>
+    <string name="saving_files_button">Save Files</string>
     <string name="loading_key_value_sets_button">Load Key-Value Sets</string>
     <string name="save_high_score_button">Save High Score</string>
+    <string name="write_into_file_button">Write Text into File</string>
+    <string name="read_from_file_button">Read Text From file</string>
+    <string name="delete_a_file_button">Delete a file</string>
 
+
+    <!-- Save Files Activity-->
+    <string name="text_label">Android Read and Write Text form File</string>
 </resources>

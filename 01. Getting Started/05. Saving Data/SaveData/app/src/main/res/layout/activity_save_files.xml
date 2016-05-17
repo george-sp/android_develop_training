@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/text_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:background="@color/colorAccent3"
+        android:padding="5dp"
+        android:text="@string/text_label"
+        android:textAlignment="center"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/text_label"
+        android:layout_margin="5dp"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:ems="10"/>
+
+    <Button
+        android:id="@+id/write_into_file_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editText"
+        android:layout_margin="5dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:onClick="writeIntoFile"
+        android:text="@string/write_into_file_button"/>
+
+    <Button
+        android:id="@+id/read_from_file_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/write_into_file_button"
+        android:layout_margin="5dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:onClick="readFromFile"
+        android:text="@string/read_from_file_button"/>
+
+    <Button
+        android:id="@+id/delete_a_file_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/read_from_file_button"
+        android:layout_margin="5dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:onClick="deleteAFile"
+        android:text="@string/delete_a_file_button"/>
+
+</RelativeLayout>

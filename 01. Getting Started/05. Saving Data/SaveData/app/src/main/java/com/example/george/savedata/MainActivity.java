@@ -24,4 +24,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, SaveKeyValueSetsActivity.class));
     }
 
+    public void saveFiles(View view) {
+        startActivity(new Intent(this, SaveFilesActivity.class));
+    }
 }

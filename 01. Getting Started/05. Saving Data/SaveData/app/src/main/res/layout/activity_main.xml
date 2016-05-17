@@ -19,4 +19,12 @@
         android:onClick="saveKeyValueSets"
         android:text="@string/saving_key_value_sets_button"/>
 
+    <Button
+        android:id="@+id/saving_files_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:onClick="saveFiles"
+        android:text="@string/saving_files_button"/>
+
 </LinearLayout>
