@@ -17,3 +17,8 @@ This lesson describes how to work with the Android file system to read and write
 A `File` object is suited to reading or writing large amounts of data in start-to-finish order without skipping around. For example, it's good for image files or anything exchanged over a network.
 
 This lesson shows how to perform basic file-related tasks in your app. The lesson assumes that you are familiar with the basics of the Linux file system and the standard file input/output APIs in [`java.io`](https://developer.android.com/reference/java/io/package-summary.html).
+
+#### Saving Data in SQL Databases
+This class assumes that you are familiar with SQL databases in general and helps you get started with SQLite databases on Android. The APIs you'll need to use a database on Android are available in the [`android.database.sqlite`](https://developer.android.com/reference/android/database/sqlite/package-summary.html) package.
+
+

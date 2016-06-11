@@ -27,4 +27,8 @@ public class MainActivity extends AppCompatActivity {
     public void saveFiles(View view) {
         startActivity(new Intent(this, SaveFilesActivity.class));
     }
+
+    public void saveInDatabase(View view) {
+        startActivity(new Intent(this, SaveDataInSqlDatabasesActivity.class));
+    }
 }

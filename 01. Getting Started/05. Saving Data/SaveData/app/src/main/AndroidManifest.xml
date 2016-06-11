@@ -3,7 +3,7 @@
           package="com.example.george.savedata">
 
     <!-- Obtain Permissions for External Storage -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
@@ -30,6 +30,8 @@
         <activity
             android:name=".SaveFilesActivity"
             android:label="@string/file_label">
+        </activity>
+        <activity android:name=".SaveDataInSqlDatabasesActivity">
         </activity>
     </application>
 
