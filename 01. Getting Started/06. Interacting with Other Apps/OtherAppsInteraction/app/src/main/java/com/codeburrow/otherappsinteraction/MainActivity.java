@@ -16,4 +16,8 @@ public class MainActivity extends AppCompatActivity {
     public void startSendUserToAnotherAppActivity(View view) {
         startActivity(new Intent(MainActivity.this, SendUserToAnotherAppActivity.class));
     }
+
+    public void startGetResultFromAnotherActivityActivity(View view) {
+        startActivity(new Intent(MainActivity.this, GetResultFromAnotherActivityActivity.class));
+    }
 }

@@ -19,4 +19,12 @@
         android:onClick="startSendUserToAnotherAppActivity"
         android:textSize="20sp"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Get a Result from the Activity"
+        android:onClick="startGetResultFromAnotherActivityActivity"
+        android:textSize="20sp"/>
+
 </LinearLayout>
