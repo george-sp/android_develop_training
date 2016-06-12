@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">OtherAppsInteraction</string>
+    <string name="chooser_title">Custom chooser title:</string>
 </resources>
