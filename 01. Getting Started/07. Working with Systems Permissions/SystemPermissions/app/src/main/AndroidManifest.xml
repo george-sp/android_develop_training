@@ -2,6 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.codeburrow.systempermissions">
 
+    <!--
+         Add Permissions to the Manifest
+
+        To declare that your app needs a permission,
+        put a <uses-permission> element in your app manifest,
+        as a child of the top-level <manifest> element.
+
+        For example, an app that needs to send SMS messages
+        would have this line in the manifest
+    -->
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,6 +26,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".DeclarePermissionsActivity">
         </activity>
     </application>
 
