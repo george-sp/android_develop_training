@@ -13,7 +13,6 @@
         would have this line in the manifest
     -->
     <uses-permission android:name="android.permission.SEND_SMS"/>
-
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
@@ -32,6 +31,8 @@
         <activity android:name=".DeclarePermissionsActivity">
         </activity>
         <activity android:name=".RequestPermissionsAtRunTimeActivity">
+        </activity>
+        <activity android:name=".PermissionsBestPracticesActivity">
         </activity>
     </application>
 
