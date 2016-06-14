@@ -14,7 +14,17 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:onClick="startDeclarePermissionsActivity"
         android:text="Declare Permissions"
         android:textSize="30sp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:onClick="startRequestPermissionsAtRunTimeActivity"
+        android:text="Request Permissions at Run Time"
+        android:textSize="30sp"/>
+
 </LinearLayout>

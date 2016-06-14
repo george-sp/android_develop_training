@@ -16,4 +16,8 @@ public class MainActivity extends AppCompatActivity {
     public void startDeclarePermissionsActivity(View view) {
         startActivity(new Intent(MainActivity.this, DeclarePermissionsActivity.class));
     }
+
+    public void startRequestPermissionsAtRunTimeActivity(View view) {
+        startActivity(new Intent(MainActivity.this, RequestPermissionsAtRunTimeActivity.class));
+    }
 }
