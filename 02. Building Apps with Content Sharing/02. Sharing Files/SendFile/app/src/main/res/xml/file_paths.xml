@@ -18,6 +18,6 @@ The name attribute tells the FileProvider to add the path segment myimages to co
 -->
 <paths>
     <files-path
-        name="myimages"
+        name="my_images"
         path="images/"/>
 </paths>
