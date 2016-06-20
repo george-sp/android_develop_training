@@ -1,11 +1,13 @@
 package com.codeburrow.requestfile;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private ParcelFileDescriptor mInputPFD;
     // The content URI of the selected file.
     Uri returnUri;
+    // Cursor to store the answer from the query() method
+    // that returns the name and size of the file associated with the content URI.
+    Cursor returnCursor;
     // ImageView to display the requested image.
     private ImageView mImageView;
     // TextView to display the returnUri.
@@ -53,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         mRequestFileIntent.setType("image/png");
     }
 
-    protected void requestFile(){
+    protected void requestFile() {
         /**
          * When the user requests a file, send an Intent to the
          * server app.
@@ -76,9 +81,32 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "The selection didn't work", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            // Get the file's content URI from the incoming Intent
+            /*
+             * Get the file's content URI from the incoming Intent,
+             * then get the file's MIME type,
+             * then query the server app to get the file's display name & size.
+             */
             returnUri = returnIntent.getData();
-            mTextView.setText(returnUri.toString());
+            String mimeType = getContentResolver().getType(returnUri);
+            returnCursor = getContentResolver().query(returnUri, null, null, null, null);
+            /*
+             * Get the column indexes of the data in the Cursor,
+             * move to the first row in the Cursor,
+             * get the data, and display it.
+             */
+            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+            returnCursor.moveToFirst();
+            // This value is the same as File.getName().
+            String fileName = returnCursor.getString(nameIndex);
+            // This value is the same as File.length().
+            String fileSize = Long.toString(returnCursor.getLong(sizeIndex));
+
+            String infoToDisplay = "URI: " + returnUri.toString() + "\n\n"
+                    + "MIME type: " + mimeType + "\n\n"
+                    + "File's display name: " + fileName + "\n\n"
+                    + "File's size: " + fileSize + " bytes";
+            mTextView.setText(infoToDisplay);
             /*
              * Try to open the file for "read" access using the returned URI.
              * If the file isn't found, write to the error log and return.
