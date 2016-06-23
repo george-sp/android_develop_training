@@ -15,10 +15,13 @@
     <!--
     Specify the NFC feature,
          to indicate that your app won't function unless NFC is present.
+
+         If you set the attribute android:required="false",
+         you must test for NFC support and Android Beam file transfer support in code.
     -->
     <uses-feature
         android:name="android.hardware.nfc"
-        android:required="true"/>
+        android:required="false"/>
 
     <!--
     Specify Android Beam file transfer,
