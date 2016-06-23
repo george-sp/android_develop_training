@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -74,6 +76,22 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         public Uri[] createBeamUris(NfcEvent event) {
+            /*
+             * Create a list of URIs, get a File,
+             * and set its permissions
+             */
+            mFileUris = new Uri[10];
+            String transferFile = "transferimage.jpg";
+            File extDir = getExternalFilesDir(null);
+            File requestFile = new File(extDir, transferFile);
+            requestFile.setReadable(true, false);
+            // Get a URI for the File and add it to the list of URIs
+            Uri fileUri = Uri.fromFile(requestFile);
+            if (fileUri != null) {
+                mFileUris[0] = fileUri;
+            } else {
+                Log.e("My Activity", "No File URI available for file.");
+            }
             return mFileUris;
         }
     }
