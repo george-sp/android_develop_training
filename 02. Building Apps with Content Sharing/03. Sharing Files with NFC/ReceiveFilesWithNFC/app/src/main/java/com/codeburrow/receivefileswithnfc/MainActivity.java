@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Called from onNewIntent() for a SINGLE_TOP Activity
      * or onCreate() for a new Activity.
-     *
+     * <p/>
      * For onNewIntent(), remember to call setIntent() to store the most
      * current Intent.
      */
@@ -45,11 +45,20 @@ public class MainActivity extends AppCompatActivity {
              * Test for the type of URI, by getting its scheme value
              */
             if (TextUtils.equals(beamUri.getScheme(), "file")) {
-                mParentPath = handleFileUri(beamUri);
-            } else if (TextUtils.equals(
-                    beamUri.getScheme(), "content")) {
+                mParentPath = new File(handleFileUri(beamUri));
+            } else if (TextUtils.equals(beamUri.getScheme(), "content")) {
                 mParentPath = handleContentUri(beamUri);
             }
         }
     }
+
+    public String handleFileUri(Uri beamUri) {
+        // Get the path part of the URI.
+        String fileName = beamUri.getPath();
+        // Create a File object for this filename.
+        File copiedFile = new File(fileName);
+        // Get a string containing the file's parent directory.
+        return copiedFile.getParent();
+    }
+
 }
