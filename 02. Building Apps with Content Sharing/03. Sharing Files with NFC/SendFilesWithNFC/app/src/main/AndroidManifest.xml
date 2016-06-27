@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.codeburrow.sendfileswithnfc">
+
+    <!--
+    Request Permissions:
+         - NFC
+         - READ_EXTERNAL_STORAGE
+    -->
+    <!-- Allows your app to send data over NFC. -->
+    <uses-permission android:name="android.permission.NFC"/>
+    <!-- Allows your app to read from external storage. -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <!--
+    Specify the NFC feature,
+         to indicate that your app won't function unless NFC is present.
+
+         If you set the attribute android:required="false",
+         you must test for NFC support and Android Beam file transfer support in code.
+    -->
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false"/>
+
+    <!--
+    Specify Android Beam file transfer,
+        if your app depends on Android Beam file transfer for a key part of its functionality you must specify the <uses-sdk> element with the android:minSdkVersion="16" attribute.
+                <uses-sdk android:minSdkVersion="16"/>
+    -->
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

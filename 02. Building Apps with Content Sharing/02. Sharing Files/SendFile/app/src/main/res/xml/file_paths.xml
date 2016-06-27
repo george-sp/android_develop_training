@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+Note: The XML file is the only way you can specify the directories you want to share; you can't programmatically add a directory.
+
+-->
+
+<!--
+ Use <files-path> element, to share directories in internal storage.
+ Use <external-path> element, to share directories in external storage.
+ Use <cache-path> element, to share directories in internal cache directory.
+ -->
+
+<!--
+The path attribute shares the images/ subdirectory of files/.
+The name attribute tells the FileProvider to add the path segment myimages to content URIs for files in the files/images/ subdirectory.
+-->
+<paths>
+    <files-path
+        name="my_images"
+        path="images/"/>
+</paths>
