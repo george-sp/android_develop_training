@@ -15,6 +15,7 @@ Dependencies and prerequisites
 - Learn how to set up your app to send files to another device.
 
 This lesson shows you how to design your app to send large files to another device using Android Beam file transfer. 
+
 To send files, you request permission to use NFC and external storage, test to ensure your device supports NFC, and provide URIs to Android Beam file transfer.
 
 > The **Android Beam** file transfer feature has the following requirements:
@@ -31,6 +32,6 @@ To send files, you request permission to use NFC and external storage, test to e
 - Learn how to set up your app to receive files sent by another device.
 
 This lesson shows you how to respond when the file copy is complete, and how to locate the copied files on the receiving device.
-Android Beam file transfer copies files to a special directory on the receiving device. It also scans the copied files using the Android Media Scanner and adds entries for media files to the [`MediaStore`](This lesson shows you how to respond when the file copy is complete, and how to locate the copied files on the receiving device.) provider. 
 
+Android Beam file transfer copies files to a special directory on the receiving device. It also scans the copied files using the Android Media Scanner and adds entries for media files to the [`MediaStore`](This lesson shows you how to respond when the file copy is complete, and how to locate the copied files on the receiving device.) provider. 
 
