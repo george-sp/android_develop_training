@@ -14,6 +14,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <!-- Matches the ACTION_VIEW intent sent from the notification. -->
+                <action android:name="android.intent.action.VIEW"/>
+                <!-- Matches an Intent that doesn't have an explicit category. -->
+                <category android:name="android.intent.category.CATEGORY_DEFAULT"/>
+                <!-- Matches a MIME type. Specify only those MIME types that your app can handle. -->
+                <data android:mimeType="mime-type"/>
+            </intent-filter>
         </activity>
     </application>
 
