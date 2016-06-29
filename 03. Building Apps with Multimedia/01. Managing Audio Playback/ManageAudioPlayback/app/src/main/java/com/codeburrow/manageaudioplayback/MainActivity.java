@@ -5,17 +5,92 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private Button requestPermanentAudioFocusButton;
+    private Button requestTransientAudioFocusButton;
+    private Button releaseAudioFocusButton;
+
     AudioManager audioManager;
+    AudioManager.OnAudioFocusChangeListener audioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            switch (focusChange) {
+                case AudioManager.AUDIOFOCUS_GAIN:
+                    // PLAY or RESUME playback, or RAISE VOLUME back to normal.
+                    Log.e(LOG_TAG, "AUDIOFOCUS_GAIN");
+                    break;
+                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
+                    Log.e(LOG_TAG, "AUDIOFOCUS_GAIN_TRANSIENT");
+                    break;
+                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK:
+                    Log.e(LOG_TAG, "AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK");
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS:
+                    // Loss of audio focus for a long time.
+                    // STOP playback.
+                    Log.e(LOG_TAG, "AUDIOFOCUS_LOSS");
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                    // Loss of audio focus for a short time.
+                    // PAUSE playback.
+                    Log.e(LOG_TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                    // Loss of audio focus for a short time.
+                    /* Ducking is the process of lowering your audio stream output volume
+                     * to make transient audio from another app easier to hear
+                     * without totally disrupting the audio from your own application.
+                     */
+                    // LOWER the volume.
+                    Log.e(LOG_TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+                    break;
+                case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+                    Log.e(LOG_TAG, "AUDIOFOCUS_REQUEST_FAILED");
+                    break;
+                default:
+                    //
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Get buttons from the activity_main layout.
+        requestPermanentAudioFocusButton = (Button) findViewById(R.id.request_permanent_audio_focus);
+        requestTransientAudioFocusButton = (Button) findViewById(R.id.request_transient_audio_focus);
+        releaseAudioFocusButton = (Button) findViewById(R.id.release_audio_focus);
+
+        // Add OnClickListeners to the buttons above.
+        requestPermanentAudioFocusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requestPermanentAudioFocus();
+            }
+        });
+        requestTransientAudioFocusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requestTransientAudioFocus();
+            }
+        });
+        releaseAudioFocusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                releaseAudioFocus();
+            }
+        });
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -88,5 +163,73 @@ public class MainActivity extends AppCompatActivity {
     private void unregisterMediaButtonEventReceiver() {
         // Stop listening for button presses
         audioManager.unregisterMediaButtonEventReceiver(new ComponentName(getPackageName(), RemoteControlReceiver.class.getName()));
+    }
+
+    /**
+     * Helper Method.
+     * <p/>
+     * Requests PERMANENT audio focus on the music audio stream.
+     * <p/>
+     * You should request the audio focus immediately before you begin playback,
+     * (such as when the user presses the play button
+     * or the background music -for the next game level- begins.)
+     */
+    private void requestPermanentAudioFocus() {
+        // Request audio focus for playback.
+        int result = audioManager.requestAudioFocus(
+                audioFocusChangeListener,
+                // Use the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            Toast.makeText(MainActivity.this, "AUDIOFOCUS_REQUEST_GRANTED", Toast.LENGTH_SHORT).show();
+            registerMediaButtonEventReceiver();
+            // Start playback.
+        }
+    }
+
+    /**
+     * Helper Method.
+     * <p/>
+     * Notifies the system that you no longer require focus and
+     * unregisters the associated OnAudioFocusChangeListener.
+     * <p/>
+     * In the case of abandoning transient focus,
+     * this allows any interrupted app to continue playback.
+     */
+    private void releaseAudioFocus() {
+        // Abandon audio focus when playback complete.
+        Toast.makeText(MainActivity.this, "ABANDON_AUDIOFOCUS", Toast.LENGTH_SHORT).show();
+        audioManager.abandonAudioFocus(audioFocusChangeListener);
+    }
+
+    /**
+     * Helper Method.
+     * <p/>
+     * When requesting transient audio focus you have an additional option:
+     * - whether or not you want to enable "ducking."
+     * <p/>
+     * Normally, when a well-behaved audio app loses audio focus
+     * it immediately silences its playback.
+     * <p/>
+     * By requesting a transient audio focus that allows ducking
+     * you tell other audio apps that it’s acceptable for them to keep playing,
+     * provided they lower their volume until the focus returns to them.
+     */
+    private void requestTransientAudioFocus() {
+        // Request audio focus for playback.
+        int result = audioManager.requestAudioFocus(
+                audioFocusChangeListener,
+                // Use the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            Toast.makeText(MainActivity.this, "AUDIOFOCUS_REQUEST_GRANTED", Toast.LENGTH_SHORT).show();
+            // Start playback.
+        }
     }
 }
