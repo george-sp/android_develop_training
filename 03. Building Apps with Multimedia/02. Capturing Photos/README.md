@@ -22,3 +22,12 @@ _(Suppose you are implementing a crowd-sourced weather service that makes a glob
 This lesson explains how to capture video using existing camera applications.
 
 _(Your application has a job to do, and integrating videos is only a small part of it. You want to take videos with minimal fuss, and not reinvent the camcorder.)_
+
+#### Controlling the Camera
+- Control the camera hardware directly and implement your own camera application.
+
+This lesson explains how to control the camera hardware directly using the framework APIs.
+
+If you want to build a specialized camera application or something fully integrated in your app UI, this lesson shows you how.
+
+
