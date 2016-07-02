@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -55,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                      This thumbnail image from "data" might be good for an icon,
                      but not a lot more.
                      Dealing with a full-sized image takes a bit more work. */
+
+            // Decode a Scaled Image.
+            setPic();
             // Add the Photo to a Gallery.
             galleryAddPic();
         }
@@ -182,4 +187,34 @@ public class MainActivity extends AppCompatActivity {
         getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
     }
 
+    /**
+     * Helper Method.
+     * <p/>
+     * Reduces the amount of dynamic heap used
+     * by expanding the JPEG into a memory array
+     * that's already scaled to match the size of the destination view.
+     */
+    private void setPic() {
+        // Get the dimensions of the View
+        int targetW = mImageView.getWidth();
+        int targetH = mImageView.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        mImageView.setImageBitmap(bitmap);
+    }
 }
