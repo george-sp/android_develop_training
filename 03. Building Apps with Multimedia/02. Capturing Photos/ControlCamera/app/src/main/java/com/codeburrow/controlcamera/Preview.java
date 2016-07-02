@@ -2,6 +2,7 @@ package com.codeburrow.controlcamera;
 
 import android.content.Context;
 import android.hardware.Camera;
+import android.hardware.Camera.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback{
     // before the live image preview can be started.
     Camera mCamera;
     private List<Camera.Size> mSupportedPreviewSizes;
+    // The previewed image size (width and height dimensions).
+    Size mPreviewSize;
 
     Preview(Context context) {
         super(context);
@@ -70,7 +73,7 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback{
         mCamera = camera;
 
         if (mCamera != null) {
-            List<Camera.Size> localSizes = mCamera.getParameters().getSupportedPreviewSizes();
+            List<Size> localSizes = mCamera.getParameters().getSupportedPreviewSizes();
             mSupportedPreviewSizes = localSizes;
             requestLayout();
 
@@ -89,4 +92,22 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback{
         }
     }
 
+    @Override
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
+        /*
+         * Now that the size is known,
+         * set up the camera parameters and begin the preview.
+         */
+        Camera.Parameters parameters = mCamera.getParameters();
+        parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+        requestLayout();
+        mCamera.setParameters(parameters);
+
+        /*
+         * Important:
+         *              Call startPreview() to start updating the preview surface.
+         *              Preview must be started before you can take a picture.
+         */
+        mCamera.startPreview();
+    }
 }
