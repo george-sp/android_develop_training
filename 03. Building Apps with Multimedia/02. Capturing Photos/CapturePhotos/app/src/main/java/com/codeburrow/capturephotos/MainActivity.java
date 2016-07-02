@@ -1,9 +1,9 @@
 package com.codeburrow.capturephotos;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -48,13 +48,15 @@ public class MainActivity extends AppCompatActivity {
              *
              * The following code retrieves this image and displays it in an ImageView.
              */
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(imageBitmap);
+//            Bundle extras = data.getExtras();
+//            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//            mImageView.setImageBitmap(imageBitmap);
             /* Note:
                      This thumbnail image from "data" might be good for an icon,
                      but not a lot more.
                      Dealing with a full-sized image takes a bit more work. */
+            // Add the Photo to a Gallery.
+            galleryAddPic();
         }
     }
 
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                  *      using a FileProvider.
                  */
                 Uri photoURI = FileProvider.getUriForFile(this, "com.codeburrow.capturephotos.fileprovider", photoFile);
-                Log.e(LOG_TAG, "photoURI: " + photoURI.toString() + "\n" + "photoFile: " + Uri.fromFile(photoFile));
+                Log.e(LOG_TAG, "photoURI: " + photoURI.toString());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 // Retrieve all activities that can be performed for the given intent.
                 List<ResolveInfo> resolveInfoList = getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
@@ -127,7 +129,14 @@ public class MainActivity extends AppCompatActivity {
         // Create an image file name.
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        // /storage/sdcard0/Android/data/com.codeburrow.capturephotos/files/Pictures
+        /*
+         * Note:
+         *      If you saved your photo to the directory provided by
+         *      getExternalFilesDir(), the media scanner cannot access the files
+         *      because they are private to your app.
+         *
+         * /storage/sdcard0/Android/data/com.codeburrow.capturephotos/files/Pictures
+         */
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -135,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 storageDir      /* directory*/
         );
         // Save a file: path for use with ACTION_VIEW intents.
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        mCurrentPhotoPath = image.getAbsolutePath();
         Log.e(LOG_TAG, "mCurrentPhotoPath: " + mCurrentPhotoPath);
         return image;
     }
@@ -143,4 +152,34 @@ public class MainActivity extends AppCompatActivity {
     public void takePictureButtonPressed(View view) {
         dispatchTakePictureIntent();
     }
+
+    /**
+     * Helper Method.
+     * <p/>
+     * Invokes the system's Media Scanner
+     * to add your photo to the Media Provider's database,
+     * making it available in the Android Gallery application and to other apps.
+     */
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File file = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(file);
+        Log.e(LOG_TAG, "contentUri: " + contentUri.toString());
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+
+        /*
+         * Note:
+         *      If you saved your photo to the directory provided
+         *      by getExternalFilesDir(), the media scanner cannot access the files
+         *      because they are private to your app.
+         *
+         *      In such a case, do the follow:
+         */
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DATA, mCurrentPhotoPath);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    }
+
 }
