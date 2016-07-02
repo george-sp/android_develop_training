@@ -15,3 +15,10 @@ Dependencies and prerequisites
 This lesson explains how to capture photos using an existing camera application.
 
 _(Suppose you are implementing a crowd-sourced weather service that makes a global weather map by blending together pictures of the sky taken by devices running your client app. Integrating photos is only a small part of your application. You want to take photos with minimal fuss, not reinvent the camera. Happily, most Android-powered devices already have at least one camera application installed. In this lesson, you learn how to make it take a picture for you.)_
+
+#### Recording Videos Simply
+- Leverage other applications and record videos with just a few lines of code.
+
+This lesson explains how to capture video using existing camera applications.
+
+_(Your application has a job to do, and integrating videos is only a small part of it. You want to take videos with minimal fuss, and not reinvent the camcorder.)_
