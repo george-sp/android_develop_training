@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     // The request code for the take picture intent.
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    // The request code for the take video intent.
+    static final int REQUEST_VIDEO_CAPTURE = 2;
     // Image View to display the picture captured by the user.
     private ImageView mImageView;
     // A collision-resistant file name.
@@ -125,6 +127,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Helper Method.
+     * <p/>
+     * The Android way of delegating actions to other applications is
+     * to invoke an Intent that describes what you want done.
+     * <p/>
+     * This process involves three pieces:
+     * - the Intent itself
+     * - a call to start the external Activity
+     * - and some code to handle the video when focus returns to your activity.
+     */
+    private void dispatchTakeVideoIntent() {
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
+        }
+    }
+
+    /**
      * Creates a file for the photo.
      *
      * @return A unique file name for a new photo using a date-time stamp.
@@ -156,6 +176,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void takePictureButtonPressed(View view) {
         dispatchTakePictureIntent();
+    }
+
+    public void takeVideoButtonPressed(View view) {
+        dispatchTakeVideoIntent();
     }
 
     /**
