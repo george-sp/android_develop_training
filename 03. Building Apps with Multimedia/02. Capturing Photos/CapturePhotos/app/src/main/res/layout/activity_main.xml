@@ -18,6 +18,15 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
+    <VideoView
+        android:id="@+id/result_video_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/take_picture_button"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:visibility="invisible"/>
+
     <Button
         android:id="@+id/take_picture_button"
         android:layout_width="match_parent"

@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.VideoView;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_VIDEO_CAPTURE = 2;
     // Image View to display the picture captured by the user.
     private ImageView mImageView;
+    // Video View to display the video recorded by the user.
+    private VideoView mVideoView;
     // A collision-resistant file name.
     private String mCurrentPhotoPath;
 
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mImageView = (ImageView) findViewById(R.id.result_picture_image_view);
+        mVideoView = (VideoView) findViewById(R.id.result_video_view);
     }
 
     @Override
@@ -60,10 +64,19 @@ public class MainActivity extends AppCompatActivity {
                      but not a lot more.
                      Dealing with a full-sized image takes a bit more work. */
 
+            mImageView.setVisibility(View.VISIBLE);
+            mVideoView.setVisibility(View.INVISIBLE);
             // Decode a Scaled Image.
             setPic();
             // Add the Photo to a Gallery.
             galleryAddPic();
+        } else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            mImageView.setVisibility(View.INVISIBLE);
+            mVideoView.setVisibility(View.VISIBLE);
+
+            Uri videoUri = data.getData();
+            mVideoView.setVideoURI(videoUri);
+            mVideoView.start();
         }
     }
 
@@ -140,6 +153,11 @@ public class MainActivity extends AppCompatActivity {
     private void dispatchTakeVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+            /*
+             * Notice that the startActivityForResult() method
+             * is protected by a condition that calls resolveActivity(),
+             * which returns the first activity component that can handle the intent.
+             */
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
     }
