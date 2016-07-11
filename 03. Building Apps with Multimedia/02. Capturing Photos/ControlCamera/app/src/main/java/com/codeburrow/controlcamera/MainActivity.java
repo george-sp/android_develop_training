@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Surface;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Camera.PictureCallback {
 
     // The Camera Object.
     private Camera mCamera;
@@ -141,5 +142,37 @@ public class MainActivity extends AppCompatActivity {
             result = (info.orientation - degrees + 360) % 360;
         }
         camera.setDisplayOrientation(result);
+    }
+
+    public void takePictureClicked(View view) {
+        /*
+         * Use the Camera.takePicture() method to take a picture
+         * once the preview is started.
+         *
+         * You can create
+         * - Camera.PictureCallback
+         * - Camera.ShutterCallback
+         * objects and pass them into Camera.takePicture().
+         *
+         * If you want to grab images continuously,
+         * you can create a Camera.PreviewCallback that implements onPreviewFrame().
+         * For something in between, you can capture only selected preview frames,
+         * or set up a delayed action to call takePicture().
+         */
+        mCamera.takePicture(null, null, this);
+    }
+
+    /**
+     * Called when image data is available after a picture is taken.
+     * The format of the data depends on:
+     * - the context of the callback
+     * - Camera.Parameters settings
+     *
+     * @param bytes  A byte array of the picture data.
+     * @param camera The Camera service object.
+     */
+    @Override
+    public void onPictureTaken(byte[] bytes, Camera camera) {
+
     }
 }
