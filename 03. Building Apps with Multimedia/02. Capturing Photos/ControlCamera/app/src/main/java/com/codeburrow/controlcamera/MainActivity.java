@@ -1,10 +1,11 @@
 package com.codeburrow.controlcamera;
 
+import android.app.Activity;
 import android.hardware.Camera;
-import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Surface;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,5 +84,62 @@ public class MainActivity extends AppCompatActivity {
             mCamera.release();
             mCamera = null;
         }
+    }
+
+    /**
+     * Helper Method.
+     * <p/>
+     * Most camera applications lock the display into landscape mode
+     * because that is the natural orientation of the camera sensor.
+     * <p/>
+     * This setting does not prevent you from taking portrait-mode photos,
+     * because the orientation of the device is recorded in the EXIF header.
+     * <p/>
+     * ----------------------------------------------------------------------
+     * <p/>
+     * setDisplayOrientation:
+     * Set the clockwise rotation of preview display in degrees.
+     * This affects the preview frames and the picture displayed after snapshot.
+     * This method is useful for portrait mode applications.
+     * Note that preview display of front-facing cameras is flipped horizontally
+     * before the rotation, that is, the image is reflected
+     * along the central vertical axis of the camera sensor.
+     * So the users can see themselves as looking into a mirror.
+     *
+     * @param activity
+     * @param cameraId
+     * @param camera
+     */
+    public static void setCameraDisplayOrientation(Activity activity,
+                                                   int cameraId, android.hardware.Camera camera) {
+        android.hardware.Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+        int rotation = activity.getWindowManager().getDefaultDisplay()
+                .getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        camera.setDisplayOrientation(result);
     }
 }
