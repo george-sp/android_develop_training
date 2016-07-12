@@ -14,6 +14,10 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
     private Camera mCamera;
     // The Preview Object.
     private Preview mPreview;
+    private int mPreviewState;
+    private static final int K_STATE_FROZEN = 0;
+    private static final int K_STATE_PREVIEW = 1;
+    private static final int K_STATE_BUSY = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +40,16 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
 
     /**
      * Helper Method.
-     * <p/>
+     * <p>
      * Getting an instance of the Camera object
      * is the first step in the process of directly controlling the camera.
-     * <p/>
+     * <p>
      * As Android's own Camera application does,
      * the recommended way to access the camera is to open Camera
      * on a separate thread that's launched from onCreate().
      * This approach is a good idea since it can take a while
      * and might bog down the UI thread.
-     * <p/>
+     * <p>
      * In a more basic implementation, opening the camera can be deferred
      * to the onResume() method to facilitate code reuse and
      * keep the flow of control simple.
@@ -75,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
 
     /**
      * Helper Method.
-     * <p/>
+     * <p>
      * Release the camera for use by other applications.
      * Applications should release the camera immediately in onPause().
      */
@@ -89,15 +93,15 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
 
     /**
      * Helper Method.
-     * <p/>
+     * <p>
      * Most camera applications lock the display into landscape mode
      * because that is the natural orientation of the camera sensor.
-     * <p/>
+     * <p>
      * This setting does not prevent you from taking portrait-mode photos,
      * because the orientation of the device is recorded in the EXIF header.
-     * <p/>
+     * <p>
      * ----------------------------------------------------------------------
-     * <p/>
+     * <p>
      * setDisplayOrientation:
      * Set the clockwise rotation of preview display in degrees.
      * This affects the preview frames and the picture displayed after snapshot.
@@ -159,7 +163,26 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
          * For something in between, you can capture only selected preview frames,
          * or set up a delayed action to call takePicture().
          */
-        mCamera.takePicture(null, null, this);
+//        mCamera.takePicture(null, null, this);
+        switch (mPreviewState) {
+            case K_STATE_FROZEN:
+                mCamera.startPreview();
+                mPreviewState = K_STATE_PREVIEW;
+                break;
+
+            default:
+                mCamera.takePicture(null, this, null);
+                mPreviewState = K_STATE_BUSY;
+        } // switch
+        shutterBtnConfig();
+    }
+
+    /**
+     * After a picture is taken, you must restart the preview
+     * before the user can take another picture.
+     * (In this example) The restart is done by overloading the shutter button.
+     */
+    public void shutterBtnConfig() {
     }
 
     /**
