@@ -2,19 +2,24 @@ package com.codeburrow.controlcamera;
 
 import android.app.Activity;
 import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 
 public class MainActivity extends AppCompatActivity implements Camera.PictureCallback {
 
-    // The Camera Object.
+    private static final String LOG_TAG = "Camera/MainActivity";
+    // This class is a client for the Camera service.
     private Camera mCamera;
     // The Preview Object.
     private Preview mPreview;
+    // The state of the live preview of the camera.
     private int mPreviewState;
+    // Constant values for the mPreviewState.
     private static final int K_STATE_FROZEN = 0;
     private static final int K_STATE_PREVIEW = 1;
     private static final int K_STATE_BUSY = 2;
@@ -22,18 +27,64 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        Log.e(LOG_TAG, "=====> onCreate");
+
+        // Instantiate Preview class - Create a Preview object.
+        mPreview = new Preview(this);
+        // Set the Layout Parameters associated with mPreview (ViewGroup subclass).
+        mPreview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        // Set an OnClickListener to the mPreview.
+        mPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+                 * Use the Camera.takePicture() method to take a picture
+                 * once the preview is started.
+                 *
+                 * You can create
+                 * - Camera.PictureCallback
+                 * - Camera.ShutterCallback
+                 * objects and pass them into Camera.takePicture().
+                 *
+                 * If you want to grab images continuously,
+                 * you can create a Camera.PreviewCallback that implements onPreviewFrame().
+                 * For something in between, you can capture only selected preview frames,
+                 * or set up a delayed action to call takePicture().
+                 */
+                switch (mPreviewState) {
+                    case K_STATE_FROZEN:
+                        Log.e(LOG_TAG, "FROZEN PREVIEW STATE");
+                        mCamera.stopPreview();
+                        mCamera.startPreview();
+                        mPreviewState = K_STATE_PREVIEW;
+                        break;
+
+                    default:
+                        Log.e(LOG_TAG, "DEFAULT PREVIEW STATE");
+                        mCamera.takePicture(null, MainActivity.this, null);
+                        mPreviewState = K_STATE_BUSY;
+                } // switch
+                shutterBtnConfig();
+            }
+        });
+        // Set the mPreviewState.
+        mPreviewState = K_STATE_PREVIEW;
+        // Set the activity content to an explicit view.
+        setContentView(mPreview);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e(LOG_TAG, "=====> onResume");
+
         safeCameraOpen(0);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.e(LOG_TAG, "=====> onPause");
 
         releaseCameraAndPreview();
     }
@@ -58,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
      * @return
      */
     private boolean safeCameraOpen(int id) {
+        Log.e(LOG_TAG, "=====> safeCameraOpen");
+
         boolean qOpened = false;
 
         try {
@@ -68,9 +121,11 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
              * so we wrap it in a try block.
              */
             mCamera = Camera.open(id);
+            mPreview.setCamera(mCamera);
+            setCameraDisplayOrientation(this, 0, mCamera);
             qOpened = (mCamera != null);
         } catch (Exception e) {
-            Log.e(getString(R.string.app_name), "failed to open Camera");
+            Log.e(LOG_TAG, "failed to open Camera");
             e.printStackTrace();
         }
 
@@ -84,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
      * Applications should release the camera immediately in onPause().
      */
     private void releaseCameraAndPreview() {
+        Log.e(LOG_TAG, "=====> releaseCameraAndPreview");
+
         mPreview.setCamera(null);
         if (mCamera != null) {
             mCamera.release();
@@ -115,11 +172,12 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
      * @param cameraId
      * @param camera
      */
-    public static void setCameraDisplayOrientation(Activity activity,
-                                                   int cameraId, android.hardware.Camera camera) {
-        android.hardware.Camera.CameraInfo info =
+    public static void setCameraDisplayOrientation(Activity activity, int cameraId, android.hardware.Camera camera) {
+        Log.e(LOG_TAG, "=====> setCameraDisplayOrientation");
+
+        CameraInfo info =
                 new android.hardware.Camera.CameraInfo();
-        android.hardware.Camera.getCameraInfo(cameraId, info);
+        Camera.getCameraInfo(cameraId, info);
         int rotation = activity.getWindowManager().getDefaultDisplay()
                 .getRotation();
         int degrees = 0;
@@ -141,40 +199,12 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
         int result;
         if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             result = (info.orientation + degrees) % 360;
-            result = (360 - result) % 360;  // compensate the mirror
-        } else {  // back-facing
+            // Compensate the mirror.
+            result = (360 - result) % 360;
+        } else {    // back-facing camera
             result = (info.orientation - degrees + 360) % 360;
         }
         camera.setDisplayOrientation(result);
-    }
-
-    public void takePictureClicked(View view) {
-        /*
-         * Use the Camera.takePicture() method to take a picture
-         * once the preview is started.
-         *
-         * You can create
-         * - Camera.PictureCallback
-         * - Camera.ShutterCallback
-         * objects and pass them into Camera.takePicture().
-         *
-         * If you want to grab images continuously,
-         * you can create a Camera.PreviewCallback that implements onPreviewFrame().
-         * For something in between, you can capture only selected preview frames,
-         * or set up a delayed action to call takePicture().
-         */
-//        mCamera.takePicture(null, null, this);
-        switch (mPreviewState) {
-            case K_STATE_FROZEN:
-                mCamera.startPreview();
-                mPreviewState = K_STATE_PREVIEW;
-                break;
-
-            default:
-                mCamera.takePicture(null, this, null);
-                mPreviewState = K_STATE_BUSY;
-        } // switch
-        shutterBtnConfig();
     }
 
     /**
@@ -183,6 +213,7 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
      * (In this example) The restart is done by overloading the shutter button.
      */
     public void shutterBtnConfig() {
+        Log.e(LOG_TAG, "=====> shutterBtnConfig");
     }
 
     /**
@@ -196,6 +227,8 @@ public class MainActivity extends AppCompatActivity implements Camera.PictureCal
      */
     @Override
     public void onPictureTaken(byte[] bytes, Camera camera) {
+        Log.e(LOG_TAG, "=====> onPictureTaken");
 
+        mPreviewState = K_STATE_FROZEN;
     }
 }
