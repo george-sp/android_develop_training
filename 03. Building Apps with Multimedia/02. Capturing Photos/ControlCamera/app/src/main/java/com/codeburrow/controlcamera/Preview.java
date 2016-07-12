@@ -23,7 +23,7 @@ import java.util.List;
  * To do so, you can use a SurfaceView to draw previews
  * of what the camera sensor is picking up.
  */
-public class Preview extends ViewGroup implements SurfaceHolder.Callback{
+public class Preview extends ViewGroup implements SurfaceHolder.Callback {
 
     SurfaceView mSurfaceView;
     SurfaceHolder mHolder;
@@ -49,24 +49,31 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback{
         mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
+    @Override
+    protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
+
+    }
+
     /**
      * Helper Method.
-     *
+     * <p>
      * Creates a camera instance and its related preview, in a specific order.
      * - camera object
      * - preview
-     *
+     * <p>
      * The process of initializing the camera is encapsulated
      * so that Camera.startPreview() is called by the setCamera() method,
      * whenever the user does something to change the camera.
-     *
+     * <p>
      * The preview must also be restarted in the preview class
      * surfaceChanged() callback method.
      *
      * @param camera
      */
     public void setCamera(Camera camera) {
-        if (mCamera == camera) { return; }
+        if (mCamera == camera) {
+            return;
+        }
 
         stopPreviewAndFreeCamera();
 
@@ -93,6 +100,12 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback{
     }
 
     @Override
+    public void surfaceCreated(SurfaceHolder surfaceHolder) {
+
+
+    }
+
+    @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
         /*
          * Now that the size is known,
@@ -109,5 +122,51 @@ public class Preview extends ViewGroup implements SurfaceHolder.Callback{
          *              Preview must be started before you can take a picture.
          */
         mCamera.startPreview();
+    }
+
+    /**
+     * This is called immediately before a surface is being destroyed.
+     * After returning from this call, you should no longer try to access this surface.
+     * If you have a rendering thread that directly accesses the surface,
+     * you must ensure that thread is no longer touching the Surface before returning from this function.
+     *
+     * @param holder The SurfaceHolder whose surface is being destroyed.
+     */
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        /*
+         * Once your application is done using the camera, it's time to clean up.
+         * In particular, you must release the Camera object, or you risk crashing other applications,
+         * including new instances of your own application.
+         *
+         * When should you stop the preview and release the camera?
+         * Well, having your preview surface destroyed is a pretty good hint
+         * that it’s time to stop the preview and release the camera
+         */
+        // Surface will be destroyed when we return, so stop the preview.
+        if (mCamera != null) {
+            // Call stopPreview() to stop updating the preview surface.
+            mCamera.stopPreview();
+        }
+    }
+
+    /**
+     * When this function returns, mCamera will be null.
+     * -------------------------------------------------
+     * This procedure was also part of the setCamera() method,
+     * so initializing a camera always begins with stopping the preview.
+     */
+    private void stopPreviewAndFreeCamera() {
+
+        if (mCamera != null) {
+            // Call stopPreview() to stop updating the preview surface.
+            mCamera.stopPreview();
+
+            // Important: Call release() to release the camera for use by other
+            // applications. Applications should release the camera immediately
+            // during onPause() and re-open() it during onResume()).
+            mCamera.release();
+
+            mCamera = null;
+        }
     }
 }
