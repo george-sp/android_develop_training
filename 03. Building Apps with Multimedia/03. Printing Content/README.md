@@ -20,3 +20,13 @@ This lesson shows you how to print an image using the v4 support library [PrintH
 Taking and sharing photos is one of the most popular uses for mobile devices.
 If your application takes photos, displays them, or allows users to share images, you should consider enabling printing of those images in your application.
 The [Android Support Library](https://developer.android.com/topic/libraries/support-library/index.html) provides a convenient function for enabling image printing using a minimal amount of code and simple set of print layout options.
+
+#### Printing HTML Documents
+- This lesson shows you how to print an HTML document.
+
+This lesson shows you how to quickly build an HTML document containing text and graphics and use [WebView](https://developer.android.com/reference/android/webkit/WebView.html) to print it.
+
+Printing out content beyond a simple photo on Android requires composing text and graphics in a print document.
+The Android framework provides a way to use HTML to compose a document and print it with a minimum of code.
+In Android 4.4 (API level 19), the [WebView](https://developer.android.com/reference/android/webkit/WebView.html) class has been updated to enable printing HTML content.
+The class allows you to load a local HTML resource or download a page from the web, create a print job and hand it off to Android's print services.
