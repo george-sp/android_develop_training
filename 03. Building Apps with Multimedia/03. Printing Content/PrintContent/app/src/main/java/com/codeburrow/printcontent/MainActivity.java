@@ -1,8 +1,15 @@
 package com.codeburrow.printcontent;
 
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintJob;
+import android.print.PrintManager;
 import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,18 +21,24 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     // Load the HTML resource into the WebView object.
     private WebView mWebView;
+    private List<PrintJob> mPrintJobs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Show the overflow menu button.
         makeActionOverflowMenuShown();
+        // Initialize mPrintJobs.
+        mPrintJobs = new ArrayList<>();
     }
 
     @Override
@@ -135,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                  *          the print output may be incomplete or blank,
                  *          or may fail completely.
                  */
-//                createWebPrintJob(webView);
+                createWebPrintJob(webView);
                 mWebView = null;
             }
         });
@@ -148,7 +161,8 @@ public class MainActivity extends AppCompatActivity {
          * place the graphic files in the assets/ directory of your project
          * and specify a base URL in the first parameter of the loadDataWithBaseURL().
           */
-//        webView.loadDataWithBaseURL("file:///android_asset/images/", htmlDocument, "text/HTML", "UTF-8", null);
+        String htmlBody = "<html><body><h1>Test Content - Image</h1><img src=\"foo.jpg\" /></body></html>";
+//        webView.loadDataWithBaseURL("file:///android_asset/images/", htmlBody, "text/HTML", "UTF-8", null);
         /*
          * You can also load a web page for printing
          * by replacing the loadDataWithBaseURL() method with loadUrl()
@@ -159,5 +173,31 @@ public class MainActivity extends AppCompatActivity {
         // Hold an instance of the WebView object so that is it not garbage collected before the print job is created.
         // Keep a reference to WebView object until you pass the PrintDocumentAdapter to the PrintManager.
         mWebView = webView;
+    }
+
+    /**
+     * Helper Method.
+     * <p/>
+     * Prints an HTML Document.
+     * <p/>
+     * The steps are:
+     * - accessing the PrintManager
+     * - creating a print adapter
+     * - creating a print job.
+     *
+     * @param webView
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void createWebPrintJob(WebView webView) {
+        // Get a PrintManager instance.
+        PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
+        // Get a print adapter instance.
+        PrintDocumentAdapter printAdapter = webView.createPrintDocumentAdapter();
+        // Create a print job with name and adapter instance.
+        String jobName = getString(R.string.app_name) + " Document";
+        PrintJob printJob = printManager.print(jobName, printAdapter,
+                new PrintAttributes.Builder().build());
+        // Save the job object for later status checking. (is not required)
+        mPrintJobs.add(printJob);
     }
 }
