@@ -6,6 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CancellationSignal;
+import android.os.ParcelFileDescriptor;
+import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintJob;
@@ -57,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_print_html_documents:
                 Toast.makeText(MainActivity.this, "Printing HTML Documents", Toast.LENGTH_SHORT).show();
                 doWebViewPrint();
+                return true;
+            case R.id.menu_print_custom_documents:
+                Toast.makeText(MainActivity.this, "Printing Custom Documents", Toast.LENGTH_SHORT).show();
+                doPrint();
                 return true;
             default:
                 return false;
@@ -229,5 +236,45 @@ public class MainActivity extends AppCompatActivity {
          * to landscape when printing a photo that is in that orientation.
          */
         printManager.print(jobName, new MyPrintDocumentAdapter(this), null);
+    }
+
+    /**
+     * A Custom PrintDocumentAdapter.
+     * <p/>
+     * The PrintDocumentAdapter abstract class is designed to handle the printing lifecycle,
+     * which has four main callback methods:
+     * - onStart()
+     * - onLayout()
+     * - onWrite()
+     * - onFinish()
+     * You must implement these methods in your print adapter in order to interact
+     * properly with the print framework.
+     * ------------------------------------------------------------------------------
+     * Note: These adapter methods are called on the main thread of your application.
+     * If you expect the execution of these methods in your implementation
+     * to take a significant amount of time,
+     * implement them to execute within a separate thread.
+     * <p/>
+     * For example, you can encapsulate the layout or print document writing
+     * work in separate AsyncTask objects.
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private class MyPrintDocumentAdapter extends PrintDocumentAdapter {
+
+        private Context mContext;
+
+        public MyPrintDocumentAdapter(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public void onLayout(PrintAttributes printAttributes, PrintAttributes printAttributes1, CancellationSignal cancellationSignal, LayoutResultCallback layoutResultCallback, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onWrite(PageRange[] pageRanges, ParcelFileDescriptor parcelFileDescriptor, CancellationSignal cancellationSignal, WriteResultCallback writeResultCallback) {
+
+        }
     }
 }

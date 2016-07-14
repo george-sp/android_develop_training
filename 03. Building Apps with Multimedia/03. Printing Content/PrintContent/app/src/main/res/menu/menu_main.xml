@@ -13,4 +13,10 @@
         android:showAsAction="never"
         android:title="Print HTML Document"
         tools:ignore="AppCompatResource"/>
+
+    <item
+        android:id="@+id/menu_print_custom_documents"
+        android:showAsAction="never"
+        android:title="Print Custom Document"
+        tools:ignore="AppCompatResource"/>
 </menu>
