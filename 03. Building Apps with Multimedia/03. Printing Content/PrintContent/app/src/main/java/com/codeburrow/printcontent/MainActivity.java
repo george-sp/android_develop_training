@@ -4,6 +4,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
 import android.os.Build;
 import android.os.Bundle;
@@ -277,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
 
         public MyPrintDocumentAdapter(Context context) {
             mContext = context;
+            mWrittenPagesArray = new SparseIntArray();
         }
 
         /**
@@ -490,6 +494,34 @@ public class MainActivity extends AppCompatActivity {
             PageRange[] pageRangesArray = new PageRange[pageRanges.size()];
             pageRanges.toArray(pageRangesArray);
             return pageRangesArray;
+        }
+
+        /**
+         * Draw elements on the printed page using the Canvas draw methods.
+         * <p/>
+         * Tip:
+         * While the Canvas object allows you to place print elements
+         * on the edge of a PDF document, many printers are not able to print
+         * the edge of a physical piece of paper.
+         * Make sure that you account for the unprintable edges of the page
+         * when you build a print document with this class.
+         *
+         * @param page The current Pdf page.
+         */
+        private void drawPage(PdfDocument.Page page) {
+            Canvas canvas = page.getCanvas();
+            // Units are in points (1/72 of an inch).
+            // Make sure you use this unit of measure for specifying the size of elements on the page.
+            int titleBaseLine = 72;
+            int leftMargin = 54;
+            Paint paint = new Paint();
+            paint.setColor(Color.BLACK);
+            paint.setTextSize(36);
+            canvas.drawText("Test Title", leftMargin, titleBaseLine, paint);
+            paint.setTextSize(11);
+            canvas.drawText("Test paragraph", leftMargin, titleBaseLine + 25, paint);
+            paint.setColor(Color.BLUE);
+            canvas.drawRect(100, 100, 172, 172, paint);
         }
     }
 }
