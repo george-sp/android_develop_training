@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.pdf.PdfDocument;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
@@ -18,6 +19,7 @@ import android.print.pdf.PrintedPdfDocument;
 import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewConfiguration;
@@ -25,6 +27,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -266,6 +270,10 @@ public class MainActivity extends AppCompatActivity {
         private Context mContext;
         // A PDF document.
         private PrintedPdfDocument mPdfDocument;
+        // A sparse array of integers to keep track which pages are written.
+        private SparseIntArray mWrittenPagesArray;
+        // Number of pages to be printed.
+        private int mPages;
 
         public MyPrintDocumentAdapter(Context context) {
             mContext = context;
@@ -292,7 +300,11 @@ public class MainActivity extends AppCompatActivity {
          * @param bundle               Additional information about how to layout the content.
          */
         @Override
-        public void onLayout(PrintAttributes oldAttributes, PrintAttributes newAttributes, CancellationSignal cancellationSignal, LayoutResultCallback layoutResultCallback, Bundle bundle) {
+        public void onLayout(PrintAttributes oldAttributes,
+                             PrintAttributes newAttributes,
+                             CancellationSignal cancellationSignal,
+                             LayoutResultCallback layoutResultCallback,
+                             Bundle bundle) {
             // Create a new PdfDocument with the requested page attributes - newAttributes.
             mPdfDocument = new PrintedPdfDocument(mContext, newAttributes);
             // Respond to cancellation request.
@@ -301,13 +313,13 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             // Compute the expected number of printed pages.
-            int pages = computePageCount(newAttributes);
-            if (pages > 0) {
+            mPages = computePageCount(newAttributes);
+            if (mPages > 0) {
                 // Return print information to print framework.
                 PrintDocumentInfo.Builder infoBuilder = new PrintDocumentInfo
                         .Builder("print_output.pdf")
                         .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
-                        .setPageCount(pages);
+                        .setPageCount(mPages);
                 PrintDocumentInfo info = infoBuilder.build();
                 // Content layout reflow is complete.
                 /*
@@ -337,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
          * is determined by the print orientation.
          *
          * @param printAttributes The attributes of the printer.
-         * @return
+         * @return int: The number of pages to be printed.
          */
         private int computePageCount(PrintAttributes printAttributes) {
             // Default item count for portrait mode.
@@ -362,9 +374,122 @@ public class MainActivity extends AppCompatActivity {
             return 5;
         }
 
+        /**
+         * Called when specific pages of the content should be written
+         * in the form of a PDF file to the given file descriptor.
+         * <p/>
+         * This method is invoked in the main thread.
+         * <p/>
+         * When it is time to write print output to a file,
+         * the Android print framework calls the onWrite() method
+         * of your application's PrintDocumentAdapter class.
+         * <p/>
+         * When this process is complete, you call the onWriteFinished() method of the callback object.
+         * <p/>
+         * Note:
+         * The Android print framework may call the onWrite() method one or more times
+         * for every call to onLayout().
+         * For this reason, it is important to set the boolean parameter of
+         * onLayoutFinished() method to false
+         * when the print content layout has not changed,
+         * to avoid unnecessary re-writes of the print document.
+         * <p/>
+         * As with layout, execution of onWrite() method can have three outcomes:
+         * 1. completion
+         * 2. cancellation
+         * 3. failure in the case where the the content cannot be written.
+         * You must indicate one of these results by calling the appropriate method
+         * of the PrintDocumentAdapter.WriteResultCallback object.
+         *
+         * @param pageRanges           The pages whose content to print - non-overlapping in ascending order.
+         * @param parcelFileDescriptor The destination file descriptor to which to write.
+         * @param cancellationSignal   Signal for observing cancel writing requests.
+         * @param writeResultCallback  Callback to inform the system for the write result.
+         */
         @Override
-        public void onWrite(PageRange[] pageRanges, ParcelFileDescriptor parcelFileDescriptor, CancellationSignal cancellationSignal, WriteResultCallback writeResultCallback) {
+        public void onWrite(final PageRange[] pageRanges,
+                            final ParcelFileDescriptor parcelFileDescriptor, // destination
+                            final CancellationSignal cancellationSignal,
+                            final WriteResultCallback writeResultCallback) {
+            // Iterate over each page of the document,
+            // check if it's in the output range.
+            for (int i = 0; i < mPages; i++) {
+                // Check to see if this page is in the output range.
+                if (containsPage(pageRanges, i)) {
+                    // If so, add it to mWrittenPagesArray.
+                    // mWrittenPagesArray.size() is used to compute the next output page index.
+                    mWrittenPagesArray.append(mWrittenPagesArray.size(), i);
+                    PdfDocument.Page page = mPdfDocument.startPage(i);
+                    // Check for cancellation.
+                    if (cancellationSignal.isCanceled()) {
+                        writeResultCallback.onWriteCancelled();
+                        mPdfDocument.close();
+                        mPdfDocument = null;
+                        return;
+                    }
+                    // Draw page content for printing.
+                    drawPage(page);
+                    // Rendering is complete, so page can be finalized.
+                    mPdfDocument.finishPage(page);
+                }
+            }
+            // Write PDF document to file.
+            try {
+                mPdfDocument.writeTo(new FileOutputStream(parcelFileDescriptor.getFileDescriptor()));
+            } catch (IOException e) {
+                writeResultCallback.onWriteFailed(e.toString());
+            } finally {
+                mPdfDocument.close();
+                mPdfDocument = null;
+            }
+            PageRange[] writtenPages = computeWrittenPages();
+            // Signal the print framework the document is complete.
+            writeResultCallback.onWriteFinished(writtenPages);
+        }
 
+        /**
+         * Identifies whether the specified page number is within the page ranges.
+         *
+         * @param pageRanges The page ranges in which the specified page number should be.
+         * @param page       int The page number to be checked.
+         * @return boolean: True if the specified page number is within the page ranges, else False.
+         */
+        private boolean containsPage(PageRange[] pageRanges, int page) {
+            final int pageRangeCount = pageRanges.length;
+            for (int i = 0; i < pageRangeCount; i++) {
+                if (pageRanges[i].getStart() <= page && pageRanges[i].getEnd() >= page) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private PageRange[] computeWrittenPages() {
+            List<PageRange> pageRanges = new ArrayList<>();
+            int start = 0;
+            int end;
+            final int writtenPageCount = mWrittenPagesArray.size();
+            for (int i = 0; i < writtenPageCount; i++) {
+                if (start < 0) {
+                    start = mWrittenPagesArray.valueAt(i);
+                }
+                int oldEnd = end = start;
+                while (i < writtenPageCount && (end - oldEnd) <= 1) {
+                    oldEnd = end;
+                    end = mWrittenPagesArray.valueAt(i);
+                    i++;
+                }
+                try {
+                    PageRange pageRange = new PageRange(start, end);
+                    pageRanges.add(pageRange);
+                } catch (IllegalArgumentException e) {
+                    Log.e(LOG_TAG, e.getMessage());
+                }
+                start = end = -1;
+            }
+            PageRange[] pageRangesArray = new PageRange[pageRanges.size()];
+            pageRanges.toArray(pageRangesArray);
+            return pageRangesArray;
         }
     }
 }
