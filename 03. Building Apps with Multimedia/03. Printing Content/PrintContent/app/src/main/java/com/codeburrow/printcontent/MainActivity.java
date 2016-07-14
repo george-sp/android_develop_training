@@ -200,4 +200,34 @@ public class MainActivity extends AppCompatActivity {
         // Save the job object for later status checking. (is not required)
         mPrintJobs.add(printJob);
     }
+
+    /**
+     * Helper Method.
+     * <p/>
+     * Initializes a print job and begin the printing lifecycle.
+     * <p/>
+     * When your application manages the printing process directly,
+     * the first step after receiving a print request from your user
+     * is to connect to Android print framework
+     * and obtain an instance of the PrintManager class.
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void doPrint() {
+        // Get a PrintManager instance.
+        PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
+        // Set job name, which will be displayed in the print queue.
+        String jobName = getString(R.string.app_name) + " Document";
+        // Start a print job, passing in a PrintDocumentAdapter implementation
+        // to handle the generation of a print document.
+        /*
+         * The last parameter in the print() method takes a PrintAttributes object.
+         * You can use this parameter to provide hints to the printing framework
+         * and pre-set options based on the previous printing cycle,
+         * thereby improving the UX - user experience.
+         * You may also use this parameter to set options that are more appropriate
+         * to the content being printed, such as setting the orientation
+         * to landscape when printing a photo that is in that orientation.
+         */
+        printManager.print(jobName, new MyPrintDocumentAdapter(this), null);
+    }
 }
