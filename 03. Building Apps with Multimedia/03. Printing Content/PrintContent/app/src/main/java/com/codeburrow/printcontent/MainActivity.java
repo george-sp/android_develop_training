@@ -11,8 +11,10 @@ import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
+import android.print.PrintDocumentInfo;
 import android.print.PrintJob;
 import android.print.PrintManager;
+import android.print.pdf.PrintedPdfDocument;
 import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -262,14 +264,102 @@ public class MainActivity extends AppCompatActivity {
     private class MyPrintDocumentAdapter extends PrintDocumentAdapter {
 
         private Context mContext;
+        // A PDF document.
+        private PrintedPdfDocument mPdfDocument;
 
         public MyPrintDocumentAdapter(Context context) {
             mContext = context;
         }
 
+        /**
+         * Called when the print attributes (page size, density, etc) changed
+         * giving you a chance to layout the content such that it matches the new constraints.
+         * <p/>
+         * This method is invoked on the main thread.
+         * <p/>
+         * The execution of onLayout() method can have three outcomes:
+         * 1. completion
+         * 2. cancellation
+         * 3. failure in the case where calculation of the layout cannot be completed.
+         * <p/>
+         * You must indicate one of these results by calling the appropriate method of
+         * the PrintDocumentAdapter.LayoutResultCallback object.
+         *
+         * @param oldAttributes        The old print attributes.
+         * @param newAttributes        The new print attributes.
+         * @param cancellationSignal   Signal for observing cancel layout requests.
+         * @param layoutResultCallback Callback to inform the system for the layout result.
+         * @param bundle               Additional information about how to layout the content.
+         */
         @Override
-        public void onLayout(PrintAttributes printAttributes, PrintAttributes printAttributes1, CancellationSignal cancellationSignal, LayoutResultCallback layoutResultCallback, Bundle bundle) {
+        public void onLayout(PrintAttributes oldAttributes, PrintAttributes newAttributes, CancellationSignal cancellationSignal, LayoutResultCallback layoutResultCallback, Bundle bundle) {
+            // Create a new PdfDocument with the requested page attributes - newAttributes.
+            mPdfDocument = new PrintedPdfDocument(mContext, newAttributes);
+            // Respond to cancellation request.
+            if (cancellationSignal.isCanceled()) {
+                layoutResultCallback.onLayoutCancelled();
+                return;
+            }
+            // Compute the expected number of printed pages.
+            int pages = computePageCount(newAttributes);
+            if (pages > 0) {
+                // Return print information to print framework.
+                PrintDocumentInfo.Builder infoBuilder = new PrintDocumentInfo
+                        .Builder("print_output.pdf")
+                        .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
+                        .setPageCount(pages);
+                PrintDocumentInfo info = infoBuilder.build();
+                // Content layout reflow is complete.
+                /*
+                 * Note:
+                 *          The boolean parameter of the onLayoutFinished() method
+                 *          indicates whether or not the layout content has actually
+                 *          changed since the last request.
+                 *          Setting this parameter properly allows the print framework
+                 *          to avoid unnecessarily calling the onWrite() method,
+                 *          essentially caching the previously written print document
+                 *          and improving performance.
+                 */
+                layoutResultCallback.onLayoutFinished(info, true);
+            } else {
+                // Otherwise report an error to the print framework.
+                layoutResultCallback.onLayoutFailed("Page count calculation failed.");
+            }
+        }
 
+        /**
+         * The main work of onLayout() is calculating the number of pages that are expected
+         * as output given the attributes of the printer.
+         * How you can calculate this number is highly dependent on how your application
+         * lays out pages for printing.
+         * -----------------------------
+         * The computePageCount shows an implementation where the number of pages
+         * is determined by the print orientation.
+         *
+         * @param printAttributes The attributes of the printer.
+         * @return
+         */
+        private int computePageCount(PrintAttributes printAttributes) {
+            // Default item count for portrait mode.
+            int itemsPerPage = 4;
+            // Get the media size.
+            PrintAttributes.MediaSize pageSize = printAttributes.getMediaSize();
+            if (!pageSize.isPortrait()) {
+                // Six items per page in landscape orientation.
+                itemsPerPage = 6;
+            }
+            // Determine number of print items.
+            int printItemCount = getPrintItemCount();
+            /*
+             * Math.ceil(double x):
+             *          Returns the smallest double value that is greater than or equal
+             *          to the argument and is equal to a mathematical integer.
+             */
+            return (int) Math.ceil(printItemCount / itemsPerPage);
+        }
+
+        public int getPrintItemCount() {
+            return 5;
         }
 
         @Override
