@@ -40,3 +40,10 @@ The class allows you to load a local HTML resource or download a page from the w
 - You cannot use JavaScript in a HTML document to trigger printing.|
 
 > **Note:** The content of a WebView object that is included in a layout can also be printed once it has loaded a document.
+
+#### Printing Custom Documents
+- This lesson shows you how you connect to the Android print manager, create a print adapter and build content for printing.
+
+For application that focus on graphic output, creating beautiful printed pages is a key feature. The print output for these types of application requires precise control of everything that goes into the page, including fonts, text flow, page breaks, headers, footers and graphic elements.
+
+_(Creating print output that is completely customized for your application requires more programming investment than the previously discussed approaches. You must build components that communicate with the print framework, adjust to printer settings, draw page elements and manage printing on multiple pages.)_
