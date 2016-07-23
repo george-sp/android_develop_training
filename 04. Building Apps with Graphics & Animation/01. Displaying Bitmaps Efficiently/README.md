@@ -18,3 +18,12 @@ Dependencies and prerequisites
 Video
 - [DevBytes: Bitmap Allocation](https://developer.android.com/training/displaying-bitmaps/index.html)
 - [DevBytes: Making Apps Beautiful -> Part 4 - Performance Tuning](https://developer.android.com/training/displaying-bitmaps/index.html)
+
+-----------------------------------------------------------
+
+### Loading Large Bitmaps Efficiently
+- This lesson walks you through decoding large bitmaps without exceeding the per application memory limit.
+
+This lesson walks you through decoding large bitmaps without exceeding the per application memory limit by loading a smaller subsampled version in memory.
+
+_(Given that you are working with limited memory, ideally you only want to load a lower resolution version in memory. The lower resolution version should match the size of the UI component that displays it. An image with a higher resolution does not provide any visible benefit, but still takes up precious memory and incurs additional performance overhead due to additional on the fly scaling.)_
