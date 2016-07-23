@@ -21,7 +21,7 @@ Video
 
 -----------------------------------------------------------
 
-### Loading Large Bitmaps Efficiently
+#### Loading Large Bitmaps Efficiently
 - This lesson walks you through decoding large bitmaps without exceeding the per application memory limit.
 
 This lesson walks you through decoding large bitmaps without exceeding the per application memory limit by loading a smaller subsampled version in memory.
@@ -32,3 +32,13 @@ Here are some factors to consider:
 - Screen size and density of the current device.
 
 _(Given that you are working with limited memory, ideally you only want to load a lower resolution version in memory. The lower resolution version should match the size of the UI component that displays it. An image with a higher resolution does not provide any visible benefit, but still takes up precious memory and incurs additional performance overhead due to additional on the fly scaling.)_
+
+#### Processing Bitmaps Off the UI Thread
+- This lesson walks you through processing bitmaps in a background thread using [AsyncTask](https://developer.android.com/reference/android/os/AsyncTask.html) and shows you how to handle concurrency issues.
+
+Bitmap processing (resizing, downloading from a remote source, etc.) should never take place on the main UI thread. This lesson walks you through processing bitmaps in a background thread using [AsyncTask](https://developer.android.com/reference/android/os/AsyncTask.html) and explains how to handle concurrency issues.
+
+The [BitmapFactory.decode*](https://developer.android.com/reference/android/graphics/BitmapFactory.html#decodeByteArray(byte[], int, int, android.graphics.BitmapFactory.Options)) methods, discussed in the [Load Large Bitmaps](https://developer.android.com/training/displaying-bitmaps/load-bitmap.html) Efficiently lesson, should not be executed on the main UI thread if the source data is read from disk or a network location (or really any source other than memory). 
+_The time this data takes to load is unpredictable and depends on a variety of factors (speed of reading from disk or network, size of image, power of CPU, etc.)._
+
+If one of these tasks blocks the UI thread, the system flags your application as non-responsive and the user has the option of closing it (see **[Designing for Responsiveness](https://developer.android.com/training/articles/perf-anr.html)** for more information).
