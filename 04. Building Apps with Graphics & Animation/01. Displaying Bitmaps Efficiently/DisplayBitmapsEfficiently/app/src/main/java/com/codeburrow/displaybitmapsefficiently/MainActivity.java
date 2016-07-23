@@ -3,11 +3,14 @@ package com.codeburrow.displaybitmapsefficiently;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,11 +25,10 @@ public class MainActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.image_view);
 
         /*
-         * Load a bitmap of arbitrarily large size
-         * into an ImageView that displays a 100x100 pixel thumbnail
+         * Start loading the bitmap asynchronously,
+         * simply create a new task and execute it.
          */
-        mImageView.setImageBitmap(
-                decodeSampledBitmapFromResource(getResources(), R.drawable.myimage, 100, 100));
+        loadBitmap(R.drawable.myimage, mImageView);
     }
 
     /**
@@ -132,5 +134,62 @@ public class MainActivity extends AppCompatActivity {
         // Decode bitmap with inSampleSize set.
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    /**
+     * Loads a large image into an ImageView using
+     * an AsyncTask and decodeSampleBitmapFromResource().
+     *
+     * @param resId
+     * @param imageView
+     */
+    public void loadBitmap(int resId, ImageView imageView) {
+        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        task.execute(resId);
+    }
+
+    /**
+     * The AsyncTask class provides an easy way to execute some work in a background thread
+     * and publish the results back on the UI thread.
+     */
+    class BitmapWorkerTask extends AsyncTask<Integer, Void, Bitmap> {
+
+        /*
+         * The WeakReference to the ImageView ensures that
+         * the AsyncTask does not prevent the ImageView and anything it references
+         * from being garbage collected.
+         *
+         * There’s no guarantee the ImageView is still around when the task finishes,
+         * so you must also check the reference in onPostExecute().
+         *
+         * The ImageView may no longer exist, if for example,
+         * the user navigates away from the activity or
+         * if a configuration change happens before the task finishes.
+         */
+        private final WeakReference<ImageView> imageViewReference;
+        private int data = 0;
+
+        public BitmapWorkerTask(ImageView imageView) {
+            // Use a WeakReference to ensure the ImageView can be garbage collected
+            imageViewReference = new WeakReference<>(imageView);
+        }
+
+        // Decode image in background.
+        @Override
+        protected Bitmap doInBackground(Integer... params) {
+            data = params[0];
+            return decodeSampledBitmapFromResource(getResources(), data, 100, 100);
+        }
+
+        // Once complete, see if ImageView is still around and set bitmap.
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (imageViewReference != null && bitmap != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(bitmap);
+                }
+            }
+        }
     }
 }
