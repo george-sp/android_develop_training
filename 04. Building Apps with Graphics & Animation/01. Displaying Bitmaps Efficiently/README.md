@@ -25,5 +25,10 @@ Video
 - This lesson walks you through decoding large bitmaps without exceeding the per application memory limit.
 
 This lesson walks you through decoding large bitmaps without exceeding the per application memory limit by loading a smaller subsampled version in memory.
+Here are some factors to consider:
+- Estimated memory usage of loading the full image in memory.
+- Amount of memory you are willing to commit to loading this image given any other memory requirements of your application.
+- Dimensions of the target [ImageView](https://developer.android.com/reference/android/widget/ImageView.html) or UI component that the image is to be loaded into.
+- Screen size and density of the current device.
 
 _(Given that you are working with limited memory, ideally you only want to load a lower resolution version in memory. The lower resolution version should match the size of the UI component that displays it. An image with a higher resolution does not provide any visible benefit, but still takes up precious memory and incurs additional performance overhead due to additional on the fly scaling.)_
