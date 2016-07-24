@@ -42,3 +42,5 @@ The [BitmapFactory.decode*](https://developer.android.com/reference/android/grap
 _The time this data takes to load is unpredictable and depends on a variety of factors (speed of reading from disk or network, size of image, power of CPU, etc.)._
 
 If one of these tasks blocks the UI thread, the system flags your application as non-responsive and the user has the option of closing it (see **[Designing for Responsiveness](https://developer.android.com/training/articles/perf-anr.html)** for more information).
+
+The blog post **[Multithreading for Performance](http://android-developers.blogspot.com/2010/07/multithreading-for-performance.html)** further discusses dealing with **concurrency**, and offers a solution where the ImageView stores a reference to the most recent AsyncTask which can later be checked when the task completes. Using a similar method, the AsyncTask from the previous section can be extended to follow a similar pattern.

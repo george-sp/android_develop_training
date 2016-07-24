@@ -3,6 +3,8 @@ package com.codeburrow.displaybitmapsefficiently;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private ImageView mImageView;
+    private Bitmap mPlaceHolderBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,13 +142,74 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Loads a large image into an ImageView using
      * an AsyncTask and decodeSampleBitmapFromResource().
+     * <p/>
+     * Before executing the BitmapWorkerTask (AsyncTask),
+     * you create an AsyncDrawable and bind it to the target ImageView.
+     * <p/>
+     * This implementation is now suitable for use in ListView and GridView components
+     * as well as any other components that recycle their child views.
+     * Simply call loadBitmap where you normally set an image to your ImageView.
+     * <p/>
+     * For example, in a GridView implementation this would be
+     * in the getView() method of the backing adapter.
      *
      * @param resId
      * @param imageView
      */
     public void loadBitmap(int resId, ImageView imageView) {
-        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-        task.execute(resId);
+        if (cancelPotentialWork(resId, imageView)) {
+            final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+            final AsyncDrawable asyncDrawable = new AsyncDrawable(getResources(), mPlaceHolderBitmap, task);
+            imageView.setImageDrawable(asyncDrawable);
+            task.execute(resId);
+        }
+    }
+
+
+    /**
+     * Checks if another running task is already associated with the ImageView.
+     * If so, it attempts to cancel the previous task by calling cancel().
+     * In a small number of cases, the new task data matches the existing task
+     * and nothing further needs to happen.
+     *
+     * @param data
+     * @param imageView
+     * @return
+     */
+    public static boolean cancelPotentialWork(int data, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+        if (bitmapWorkerTask != null) {
+            final int bitmapData = bitmapWorkerTask.data;
+            // If bitmapData is not yet set or it differs from the new data.
+            if (bitmapData == 0 || bitmapData != data) {
+                // Cancel previous task.
+                bitmapWorkerTask.cancel(true);
+            } else {
+                // The same work is already in progress.
+                return false;
+            }
+        }
+        // No task associated with the ImageView, or an existing task was cancelled.
+        return true;
+    }
+
+    /**
+     * Helper Method.
+     * <p/>
+     * Retrieves the task associated with a particular ImageView.
+     *
+     * @return
+     */
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
     }
 
     /**
@@ -184,12 +248,40 @@ public class MainActivity extends AppCompatActivity {
         // Once complete, see if ImageView is still around and set bitmap.
         @Override
         protected void onPostExecute(Bitmap bitmap) {
+            // Check if the task is cancelled.
+            if (isCancelled()) {
+                bitmap = null;
+            }
+
             if (imageViewReference != null && bitmap != null) {
                 final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
+                final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+                // Check if the current task matches the one associated with the ImageView.
+                if (this == bitmapWorkerTask && imageView != null) {
                     imageView.setImageBitmap(bitmap);
                 }
             }
+        }
+    }
+
+    /**
+     * Create a dedicated Drawable subclass to store a reference back to the worker task.
+     * In this case, a BitmapDrawable:
+     * https://developer.android.com/reference/android/graphics/drawable/BitmapDrawable.html
+     * is used so that a placeholder image can be displayed in the ImageView
+     * while the task completes.
+     */
+    static class AsyncDrawable extends BitmapDrawable {
+
+        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+            super(res, bitmap);
+            bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
+        }
+
+        public BitmapWorkerTask getBitmapWorkerTask() {
+            return bitmapWorkerTaskReference.get();
         }
     }
 }
