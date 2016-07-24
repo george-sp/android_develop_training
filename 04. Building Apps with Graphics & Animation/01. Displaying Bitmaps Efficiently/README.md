@@ -44,3 +44,11 @@ _The time this data takes to load is unpredictable and depends on a variety of f
 If one of these tasks blocks the UI thread, the system flags your application as non-responsive and the user has the option of closing it (see **[Designing for Responsiveness](https://developer.android.com/training/articles/perf-anr.html)** for more information).
 
 The blog post **[Multithreading for Performance](http://android-developers.blogspot.com/2010/07/multithreading-for-performance.html)** further discusses dealing with **concurrency**, and offers a solution where the ImageView stores a reference to the most recent AsyncTask which can later be checked when the task completes. Using a similar method, the AsyncTask from the previous section can be extended to follow a similar pattern.
+
+#### Caching Bitmaps
+- This lesson walks you through using a memory and disk bitmap cache to improve the responsiveness and fluidity of your UI when loading multiple bitmaps.
+
+Loading a single bitmap into your user interface (UI) is straightforward, however things get more complicated if you need to load a larger set of images at once. 
+In many cases (such as with components like [ListView](https://developer.android.com/reference/android/widget/ListView.html), [GridView](https://developer.android.com/reference/android/widget/GridView.html) or [ViewPager](https://developer.android.com/reference/android/support/v4/view/ViewPager.html)), the total number of images on-screen combined with images that might soon scroll onto the screen are essentially unlimited.
+
+_Memory usage is kept down with components like this by recycling the child views as they move off-screen. The garbage collector also frees up your loaded bitmaps, assuming you don't keep any long lived references. This is all good and well, but in order to keep a fluid and fast-loading UI you want to avoid continually processing these images each time they come back on-screen. A memory and disk cache can often help here, allowing components to quickly reload processed images._
