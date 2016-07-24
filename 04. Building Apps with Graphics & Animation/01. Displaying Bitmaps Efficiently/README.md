@@ -52,3 +52,21 @@ Loading a single bitmap into your user interface (UI) is straightforward, howeve
 In many cases (such as with components like [ListView](https://developer.android.com/reference/android/widget/ListView.html), [GridView](https://developer.android.com/reference/android/widget/GridView.html) or [ViewPager](https://developer.android.com/reference/android/support/v4/view/ViewPager.html)), the total number of images on-screen combined with images that might soon scroll onto the screen are essentially unlimited.
 
 _Memory usage is kept down with components like this by recycling the child views as they move off-screen. The garbage collector also frees up your loaded bitmaps, assuming you don't keep any long lived references. This is all good and well, but in order to keep a fluid and fast-loading UI you want to avoid continually processing these images each time they come back on-screen. A memory and disk cache can often help here, allowing components to quickly reload processed images._
+
+> #### Use a Memory Cache
+> 
+> A memory cache offers fast access to bitmaps at the cost of taking up valuable application memory. The [LruCache](https://developer.android.com/reference/android/util/LruCache.html) class (also available in the [Support Library](https://developer.android.com/reference/android/support/v4/util/LruCache.html) for use back to API Level 4) is particularly well suited to the task of caching bitmaps, keeping recently referenced objects in a strong referenced [LinkedHashMap](https://developer.android.com/reference/java/util/LinkedHashMap.html) and evicting the least recently used member before the cache exceeds its designated size.
+> 
+
+> > Note: In the past, a popular memory cache implementation was a [SoftReference](https://developer.android.com/reference/java/lang/ref/SoftReference.html) or [WeakReference](https://developer.android.com/reference/java/lang/ref/SoftReference.html) bitmap cache, however this is not recommended. Starting from Android 2.3 (API Level 9) the garbage collector is more aggressive with collecting soft/weak references which makes them fairly ineffective. In addition, prior to Android 3.0 (API Level 11), the backing data of a bitmap was stored in native memory which is not released in a predictable manner, potentially causing an application to briefly exceed its memory limits and crash.
+
+> 
+> In order to choose a suitable size for a LruCache, a number of factors should be taken into consideration, for example:
+> 
+> - How memory intensive is the rest of your activity and/or application?
+> - How many images will be on-screen at once? How many need to be available ready to come on-screen?
+> - What is the screen size and density of the device? An extra high density screen (xhdpi) device like Galaxy Nexus will need a larger cache to hold the same number of images in memory compared to a device like Nexus S (hdpi).
+> - What dimensions and configuration are the bitmaps and therefore how much memory will each take up?
+> - How frequently will the images be accessed? Will some be accessed more frequently than others? If so, perhaps you may want to keep certain items always in memory or even have multiple LruCache objects for different groups of bitmaps.
+> - Can you balance quality against quantity? Sometimes it can be more useful to store a larger number of lower quality bitmaps, potentially loading a higher quality version in another background task.
+> There is no specific size or formula that suits all applications, it's up to you to analyze your usage and come up with a suitable solution. A cache that is too small causes additional overhead with no benefit, a cache that is too large can once again cause java.lang.OutOfMemory exceptions and leave the rest of your app little memory to work with.

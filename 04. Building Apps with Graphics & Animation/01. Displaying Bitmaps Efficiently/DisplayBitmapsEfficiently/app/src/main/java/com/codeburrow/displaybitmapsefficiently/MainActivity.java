@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.util.LruCache;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -17,12 +18,40 @@ import java.lang.ref.WeakReference;
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    // LruCache: https://developer.android.com/reference/android/util/LruCache.html
+    private LruCache<String, Bitmap> mMemoryCache;
     private ImageView mImageView;
     private Bitmap mPlaceHolderBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+         * Note:
+         * In this example, one eighth of the application memory is allocated for our cache.
+         * On a normal/hdpi device this is a minimum of around 4MB (32/8).
+         * A full screen GridView filled with images on a device with 800x480 resolution
+         * would use around 1.5MB (800*480*4 bytes),
+         * so this would cache a minimum of around 2.5 pages of images in memory.
+         */
+        // Get max available VM memory, exceeding this amount will throw an
+        // OutOfMemory exception. Stored in kilobytes as LruCache takes an
+        // int in its constructor.
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+        // Use 1/8th of the available memory for this memory cache.
+        final int cacheSize = maxMemory / 8;
+
+        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                // The cache size will be measured in kilobytes rather than
+                // number of items.
+                return bitmap.getByteCount() / 1024;
+            }
+        };
+
         setContentView(R.layout.activity_main);
 
         mImageView = (ImageView) findViewById(R.id.image_view);
@@ -34,25 +63,35 @@ public class MainActivity extends AppCompatActivity {
         loadBitmap(R.drawable.myimage, mImageView);
     }
 
+    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
+    }
+
+    public Bitmap getBitmapFromMemCache(String key) {
+        return mMemoryCache.get(key);
+    }
+
     /**
      * Reads the dimensions and type of the image data
      * prior to construction (and memory allocation) of the bitmap.
-     * <p/>
+     * <p>
      * To avoid java.lang.OutOfMemory exceptions,
      * check the dimensions of a bitmap before decoding it,
      * unless you absolutely trust the source to provide you
      * with predictably sized image data that comfortably fits within the available memory.
-     * <p/>
+     * <p>
      * The BitmapFactory class provides several decoding methods
      * (decodeByteArray(), decodeFile(), decodeResource(), etc.)
      * for creating a Bitmap from various sources.
-     * <p/>
+     * <p>
      * These methods attempt to allocate memory for the constructed bitmap
      * and therefore can easily result in an OutOfMemory exception.
-     * <p/>
+     * <p>
      * Each type of decode method has additional signatures that let you specify
      * decoding options via the BitmapFactory.Options class.
-     * <p/>
+     * <p>
      * Setting the inJustDecodeBounds property to true while decoding
      * avoids memory allocation, returning null for the bitmap object
      * but setting outWidth, outHeight and outMimeType.
@@ -72,16 +111,16 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Calculates a sample size value that is a power of two based on a target width and height.
-     * <p/>
+     * <p>
      * Note:
      * A power of two value is calculated because
      * the decoder uses a final value by rounding down to the nearest power of two,
      * as per the inSampleSize documentation.
      * https://developer.android.com/reference/android/graphics/BitmapFactory.Options.html#inSampleSize
-     * <p/>
+     * <p>
      * To tell the decoder to subsample the image, loading a smaller version into memory,
      * set inSampleSize to true in your BitmapFactory.Options object.
-     * <p/>
+     * <p>
      * To use this method, first decode with inJustDecodeBounds set to true,
      * pass the options through and then decode again using the new inSampleSize value
      * and inJustDecodeBounds set to false
@@ -142,25 +181,23 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Loads a large image into an ImageView using
      * an AsyncTask and decodeSampleBitmapFromResource().
-     * <p/>
-     * Before executing the BitmapWorkerTask (AsyncTask),
-     * you create an AsyncDrawable and bind it to the target ImageView.
-     * <p/>
-     * This implementation is now suitable for use in ListView and GridView components
-     * as well as any other components that recycle their child views.
-     * Simply call loadBitmap where you normally set an image to your ImageView.
-     * <p/>
-     * For example, in a GridView implementation this would be
-     * in the getView() method of the backing adapter.
+     * <p>
+     * When loading a bitmap into an ImageView, the LurCache is checked first.
+     * If an entry is found, it is used immediately to update the ImageView,
+     * otherwise a background thread is spawned to process the image.
      *
      * @param resId
      * @param imageView
      */
     public void loadBitmap(int resId, ImageView imageView) {
-        if (cancelPotentialWork(resId, imageView)) {
-            final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-            final AsyncDrawable asyncDrawable = new AsyncDrawable(getResources(), mPlaceHolderBitmap, task);
-            imageView.setImageDrawable(asyncDrawable);
+        final String imageKey = String.valueOf(resId);
+
+        final Bitmap bitmap = getBitmapFromMemCache(imageKey);
+        if (bitmap != null) {
+            mImageView.setImageBitmap(bitmap);
+        } else {
+            mImageView.setImageResource(R.drawable.image_placeholder);
+            BitmapWorkerTask task = new BitmapWorkerTask(mImageView);
             task.execute(resId);
         }
     }
@@ -196,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Helper Method.
-     * <p/>
+     * <p>
      * Retrieves the task associated with a particular ImageView.
      *
      * @return
@@ -241,8 +278,9 @@ public class MainActivity extends AppCompatActivity {
         // Decode image in background.
         @Override
         protected Bitmap doInBackground(Integer... params) {
-            data = params[0];
-            return decodeSampledBitmapFromResource(getResources(), data, 100, 100);
+            final Bitmap bitmap = decodeSampledBitmapFromResource(getResources(), params[0], 100, 100);
+            addBitmapToMemoryCache(String.valueOf(params[0]), bitmap);
+            return bitmap;
         }
 
         // Once complete, see if ImageView is still around and set bitmap.
