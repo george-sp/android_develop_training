@@ -52,14 +52,21 @@ public class MainActivity extends AppCompatActivity {
         final int cacheSize = maxMemory / 8;
 
         // Initialize memory cache.
-        mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
+        RetainFragment retainFragment =
+                RetainFragment.findOrCreateRetainFragment(getFragmentManager());
+        mMemoryCache = retainFragment.mRetainedCache;
+        if (mMemoryCache == null) {
+            mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
+                // Initialize cache here as usual
+                @Override
+                protected int sizeOf(String key, Bitmap bitmap) {
+                    // The cache size will be measured in kilobytes rather than
+                    // number of items.
+                    return bitmap.getByteCount() / 1024;
+                }
+            };
+            retainFragment.mRetainedCache = mMemoryCache;
+        }
         // Initialize disk cache on background thread.
         File cacheDir = getDiskCacheDir(this, DISK_CACHE_SUBDIR);
         new InitDiskCacheTask().execute(cacheDir);
