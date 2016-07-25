@@ -70,3 +70,14 @@ _Memory usage is kept down with components like this by recycling the child view
 > - How frequently will the images be accessed? Will some be accessed more frequently than others? If so, perhaps you may want to keep certain items always in memory or even have multiple LruCache objects for different groups of bitmaps.
 > - Can you balance quality against quantity? Sometimes it can be more useful to store a larger number of lower quality bitmaps, potentially loading a higher quality version in another background task.
 > There is no specific size or formula that suits all applications, it's up to you to analyze your usage and come up with a suitable solution. A cache that is too small causes additional overhead with no benefit, a cache that is too large can once again cause java.lang.OutOfMemory exceptions and leave the rest of your app little memory to work with.
+
+> #### Use a Disk Cache
+> A memory cache is useful in speeding up access to recently viewed bitmaps, however you cannot rely on images being available in this cache. Components like [GridView](https://developer.android.com/reference/android/widget/GridView.html) with larger datasets can easily fill up a memory cache. Your application could be interrupted by another task like a phone call, and while in the background it might be killed and the memory cache destroyed. Once the user resumes, your application has to process each image again.
+> 
+> A disk cache can be used in these cases to persist processed bitmaps and help decrease loading times where images are no longer available in a memory cache. Of course, fetching images from disk is slower than loading from memory and should be done in a background thread, as disk read times can be unpredictable.
+> 
+> > Note: A [ContentProvider](https://developer.android.com/reference/android/content/ContentProvider.html) might be a more appropriate place to store cached images if they are accessed more frequently, for example in an image gallery application.
+>
+> The sample code of this class uses a **DiskLruCache** implementation that is pulled from the **[Android source](https://android.googlesource.com/platform/libcore/+/jb-mr2-release/luni/src/main/java/libcore/io/DiskLruCache.java)**.
+> 
+> While the memory cache is checked in the UI thread, the disk cache is checked in the background thread. Disk operations should never take place on the UI thread. When image processing is complete, the final bitmap is added to both the memory and disk cache for future use.

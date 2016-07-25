@@ -1,5 +1,6 @@
 package com.codeburrow.displaybitmapsefficiently;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,12 +8,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.util.LruCache;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
     private LruCache<String, Bitmap> mMemoryCache;
     private ImageView mImageView;
     private Bitmap mPlaceHolderBitmap;
+    private DiskLruCache mDiskLruCache;
+    private final Object mDiskCacheLock = new Object();
+    private boolean mDiskCacheStarting = true;
+    private static final int DISK_CACHE_SIZE = 1024 * 1024 * 10; // 10MB
+    private static final String DISK_CACHE_SUBDIR = "thumbnails";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         // Use 1/8th of the available memory for this memory cache.
         final int cacheSize = maxMemory / 8;
 
+        // Initialize memory cache.
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
@@ -51,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
                 return bitmap.getByteCount() / 1024;
             }
         };
+        // Initialize disk cache on background thread.
+        File cacheDir = getDiskCacheDir(this, DISK_CACHE_SUBDIR);
+        new InitDiskCacheTask().execute(cacheDir);
 
         setContentView(R.layout.activity_main);
 
@@ -76,22 +88,22 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Reads the dimensions and type of the image data
      * prior to construction (and memory allocation) of the bitmap.
-     * <p>
+     * <p/>
      * To avoid java.lang.OutOfMemory exceptions,
      * check the dimensions of a bitmap before decoding it,
      * unless you absolutely trust the source to provide you
      * with predictably sized image data that comfortably fits within the available memory.
-     * <p>
+     * <p/>
      * The BitmapFactory class provides several decoding methods
      * (decodeByteArray(), decodeFile(), decodeResource(), etc.)
      * for creating a Bitmap from various sources.
-     * <p>
+     * <p/>
      * These methods attempt to allocate memory for the constructed bitmap
      * and therefore can easily result in an OutOfMemory exception.
-     * <p>
+     * <p/>
      * Each type of decode method has additional signatures that let you specify
      * decoding options via the BitmapFactory.Options class.
-     * <p>
+     * <p/>
      * Setting the inJustDecodeBounds property to true while decoding
      * avoids memory allocation, returning null for the bitmap object
      * but setting outWidth, outHeight and outMimeType.
@@ -111,16 +123,16 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Calculates a sample size value that is a power of two based on a target width and height.
-     * <p>
+     * <p/>
      * Note:
      * A power of two value is calculated because
      * the decoder uses a final value by rounding down to the nearest power of two,
      * as per the inSampleSize documentation.
      * https://developer.android.com/reference/android/graphics/BitmapFactory.Options.html#inSampleSize
-     * <p>
+     * <p/>
      * To tell the decoder to subsample the image, loading a smaller version into memory,
      * set inSampleSize to true in your BitmapFactory.Options object.
-     * <p>
+     * <p/>
      * To use this method, first decode with inJustDecodeBounds set to true,
      * pass the options through and then decode again using the new inSampleSize value
      * and inJustDecodeBounds set to false
@@ -181,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Loads a large image into an ImageView using
      * an AsyncTask and decodeSampleBitmapFromResource().
-     * <p>
+     * <p/>
      * When loading a bitmap into an ImageView, the LurCache is checked first.
      * If an entry is found, it is used immediately to update the ImageView,
      * otherwise a background thread is spawned to process the image.
@@ -233,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Helper Method.
-     * <p>
+     * <p/>
      * Retrieves the task associated with a particular ImageView.
      *
      * @return
@@ -247,6 +259,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return null;
+    }
+
+    class InitDiskCacheTask extends AsyncTask<File, Void, Void> {
+
+        @Override
+        protected Void doInBackground(File... params) {
+            synchronized (mDiskCacheLock) {
+                File cacheDir = params[0];
+                mDiskLruCache = DiskLruCache.open(cacheDir, DISK_CACHE_SIZE);
+                mDiskCacheStarting = false; // Finished initialization
+                mDiskCacheLock.notifyAll(); // Wake any waiting threads
+            }
+            return null;
+        }
     }
 
     /**
@@ -278,8 +304,20 @@ public class MainActivity extends AppCompatActivity {
         // Decode image in background.
         @Override
         protected Bitmap doInBackground(Integer... params) {
-            final Bitmap bitmap = decodeSampledBitmapFromResource(getResources(), params[0], 100, 100);
-            addBitmapToMemoryCache(String.valueOf(params[0]), bitmap);
+            final String imageKey = String.valueOf(params[0]);
+
+            // Check disk cache in background thread
+            Bitmap bitmap = getBitmapFromDiskCache(imageKey);
+
+            if (bitmap == null) { // Not found in disk cache
+                // Process as normal
+                final Bitmap bitmap = decodeSampledBitmapFromResource(
+                        getResources(), params[0], 100, 100));
+            }
+
+            // Add final bitmap to caches
+            addBitmapToCache(imageKey, bitmap);
+
             return bitmap;
         }
 
@@ -300,6 +338,52 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+
+    public void addBitmapToCache(String key, Bitmap bitmap) {
+        // Add to memory cache as before
+        if (getBitmapFromMemCache(key) == null) {
+            mMemoryCache.put(key, bitmap);
+        }
+
+        // Also add to disk cache
+        synchronized (mDiskCacheLock) {
+            if (mDiskLruCache != null && mDiskLruCache.get(key) == null) {
+                mDiskLruCache.put(key, bitmap);
+            }
+        }
+    }
+
+    public Bitmap getBitmapFromDiskCache(String key) {
+        synchronized (mDiskCacheLock) {
+            // Wait while disk cache is started from background thread
+            while (mDiskCacheStarting) {
+                try {
+                    mDiskCacheLock.wait();
+                } catch (InterruptedException e) {
+                }
+            }
+            if (mDiskLruCache != null) {
+                return mDiskLruCache.get(key);
+            }
+        }
+        return null;
+    }
+
+    /*
+     * Creates a unique subdirectory of the designated app cache directory.
+     * Tries to use external but if not mounted, falls back on internal storage.
+     */
+    public static File getDiskCacheDir(Context context, String uniqueName) {
+        // Check if media is mounted or storage is built-in, if so, try and use external cache dir
+        // otherwise use internal cache dir
+        final String cachePath =
+                Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
+                        !isExternalStorageRemovable() ? getExternalCacheDir(context).getPath() :
+                        context.getCacheDir().getPath();
+
+        return new File(cachePath + File.separator + uniqueName);
     }
 
     /**
