@@ -81,3 +81,14 @@ _Memory usage is kept down with components like this by recycling the child view
 > The sample code of this class uses a **DiskLruCache** implementation that is pulled from the **[Android source](https://android.googlesource.com/platform/libcore/+/jb-mr2-release/luni/src/main/java/libcore/io/DiskLruCache.java)**.
 > 
 > While the memory cache is checked in the UI thread, the disk cache is checked in the background thread. Disk operations should never take place on the UI thread. When image processing is complete, the final bitmap is added to both the memory and disk cache for future use.
+
+#### Managing Bitmap Memory
+- This lesson explains how to manage bitmap memory to maximize ypur app's performance.
+
+In addition to the steps described in [Caching Bitmaps](https://developer.android.com/training/displaying-bitmaps/cache-bitmap.html), there are specific things you can do to facilitate garbage collection and bitmap reuse.
+The recommended strategy depends on which version(s) of Android you are targeting.
+
+To set the stage for this lesson, here is how Android's management of bitmap memory has evolved:
+
+ 1. _On Android Android 2.2 (API level 8) and lower_, when garbage collection occurs, your app's threads get stopped. This causes a lag that can degrade performance. **Android 2.3 adds concurrent garbage collection, which means that the memory is reclaimed soon after a bitmap is no longer referenced.**
+ 2. _On Android 2.3.3 (API level 10) and lower_, the backing pixel data for a bitmap is stored in native memory. It is separate from the bitmap itself, which is stored in the Dalvik heap. The pixel data in native memory is not released in a predictable manner, potentially causing an application to briefly exceed its memory limits and crash. **As of Android 3.0 (API level 11), the pixel data is stored on the Dalvik heap along with the associated bitmap.**
