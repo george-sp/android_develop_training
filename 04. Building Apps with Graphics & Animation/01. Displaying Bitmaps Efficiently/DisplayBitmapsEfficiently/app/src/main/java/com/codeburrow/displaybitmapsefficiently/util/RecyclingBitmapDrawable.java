@@ -1,4 +1,4 @@
-package com.codeburrow.displaybitmapsefficiently;
+package com.codeburrow.displaybitmapsefficiently.util;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -8,17 +8,10 @@ import android.graphics.drawable.BitmapDrawable;
  * A BitmapDrawable that keeps track of whether it is being displayed or cached.
  * When the drawable is no longer being displayed or cached,
  * {@link android.graphics.Bitmap#recycle() recycle()} will be called on this drawable's bitmap.
- * <p>
- * The following code snippet gives an example of calling recycle().
- * It uses reference counting (in the variables mDisplayRefCount and mCacheRefCount)
- * to track whether a bitmap is currently being displayed or in the cache.
- * The code recycles the bitmap when these conditions are met:
- * - The reference count for both mDisplayRefCount and mCacheRefCount is 0.
- * - The bitmap is not null, and it hasn't been recycled yet.
  */
 public class RecyclingBitmapDrawable extends BitmapDrawable {
 
-    static final String LOG_TAG = "CountingBitmapDrawable";
+    private static final String LOG_TAG = RecyclingBitmapDrawable.class.getSimpleName();
 
     private int mCacheRefCount = 0;
     private int mDisplayRefCount = 0;
@@ -30,12 +23,14 @@ public class RecyclingBitmapDrawable extends BitmapDrawable {
     }
 
     /**
-     * Notify the drawable that the displayed state has changed.
-     * Keep a count to determine when the drawable is no longer displayed.
+     * Notify the drawable that the displayed state has changed. Internally a
+     * count is kept so that the drawable knows when it is no longer being
+     * displayed.
      *
      * @param isDisplayed - Whether the drawable is being displayed or not
      */
     public void setIsDisplayed(boolean isDisplayed) {
+        //BEGIN_INCLUDE(set_is_displayed)
         synchronized (this) {
             if (isDisplayed) {
                 mDisplayRefCount++;
@@ -44,17 +39,20 @@ public class RecyclingBitmapDrawable extends BitmapDrawable {
                 mDisplayRefCount--;
             }
         }
-        // Check to see if recycle() can be called.
+
+        // Check to see if recycle() can be called
         checkState();
+        //END_INCLUDE(set_is_displayed)
     }
 
     /**
-     * Notify the drawable that the cache state has changed.
-     * Keep a count to determine when the drawable is no longer being cached.
+     * Notify the drawable that the cache state has changed. Internally a count
+     * is kept so that the drawable knows when it is no longer being cached.
      *
      * @param isCached - Whether the drawable is being cached or not
      */
     public void setIsCached(boolean isCached) {
+        //BEGIN_INCLUDE(set_is_cached)
         synchronized (this) {
             if (isCached) {
                 mCacheRefCount++;
@@ -62,21 +60,25 @@ public class RecyclingBitmapDrawable extends BitmapDrawable {
                 mCacheRefCount--;
             }
         }
-        // Check to see if recycle() can be called.
+
+        // Check to see if recycle() can be called
         checkState();
+        //END_INCLUDE(set_is_cached)
     }
 
     private synchronized void checkState() {
+        //BEGIN_INCLUDE(check_state)
         // If the drawable cache and display ref counts = 0, and this drawable
-        // has been displayed, then recycle.
+        // has been displayed, then recycle
         if (mCacheRefCount <= 0 && mDisplayRefCount <= 0 && mHasBeenDisplayed && hasValidBitmap()) {
             getBitmap().recycle();
         }
+        //END_INCLUDE(check_state)
     }
 
     private synchronized boolean hasValidBitmap() {
         Bitmap bitmap = getBitmap();
         return bitmap != null && !bitmap.isRecycled();
     }
-}
 
+}
