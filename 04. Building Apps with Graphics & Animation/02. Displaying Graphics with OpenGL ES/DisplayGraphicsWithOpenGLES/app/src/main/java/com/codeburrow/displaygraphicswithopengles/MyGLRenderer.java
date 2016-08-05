@@ -72,8 +72,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        // Draw the triangle object.
-        mTriangle.draw();
+        // Set the camera position (View matrix).
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        // Calculate the projection and view transformation.
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        // Draw shape.
+        mTriangle.draw(mMVPMatrix);
     }
 
     /**
