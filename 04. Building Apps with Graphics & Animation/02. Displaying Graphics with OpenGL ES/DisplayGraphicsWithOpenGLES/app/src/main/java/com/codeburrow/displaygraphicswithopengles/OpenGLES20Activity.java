@@ -6,12 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 
 /**
  * A minimal implementation of an activity that uses a GLSurfaceView as its primary view
- *
+ * <p/>
  * Android applications that use OpenGL ES have activities just like any other application that has a user interface.
  * The main difference from other applications is what you put in the layout for your activity.
  * While in many applications you might use TextView, Button and ListView, in an app that uses OpenGL ES, you can also add a GLSurfaceView.
- *
- *
  */
 public class OpenGLES20Activity extends AppCompatActivity {
 
