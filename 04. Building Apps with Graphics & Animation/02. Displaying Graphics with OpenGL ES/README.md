@@ -62,3 +62,11 @@ Learn how to do basic movement and animation of drawn objects with OpenGL.
 This lesson explains how to add motion to a shape with rotation.
 
 Drawing objects on screen is a pretty basic feature of OpenGL, but you can do this with other Android graphics framwork classes, including [Canvas](https://developer.android.com/reference/android/graphics/Canvas.html) and [Drawable](https://developer.android.com/reference/android/graphics/drawable/Drawable.html) objects. OpenGL ES provides additional capabilities for moving and transforming drawn objects in three dimensions or in other unique ways to create compelling user experiences.
+
+#### Responding to Touch Events
+Learn how to do basic interaction with OpenGL graphics.
+
+This lesson shows you how to listen for touch events to let users rotate an OpenGL ES object.
+
+Making objects move according to a preset program like the rotating triangle is useful for getting some attention, but what if you want to have users interact with your OpenGL ES graphics? 
+The key to making your OpenGL ES application touch interactive is expanding your implementation of [GLSurfaceView](https://developer.android.com/reference/android/opengl/GLSurfaceView.html) to override the [onTouchEvent()](https://developer.android.com/reference/android/view/View.html#onTouchEvent(android.view.MotionEvent)) to listen for touch events.
