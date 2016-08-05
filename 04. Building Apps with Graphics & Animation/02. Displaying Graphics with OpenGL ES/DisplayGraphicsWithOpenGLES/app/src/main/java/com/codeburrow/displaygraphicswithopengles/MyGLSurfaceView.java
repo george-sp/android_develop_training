@@ -61,17 +61,15 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
                 // Reverse direction of rotation above the mid-line.
                 if (y > getHeight() / 2) {
-                    dx = dx * -1 ;
+                    dx = dx * -1;
                 }
 
                 // Reverse direction of rotation to left of the mid-line.
                 if (x < getWidth() / 2) {
-                    dy = dy * -1 ;
+                    dy = dy * -1;
                 }
 
-                mRenderer.setAngle(
-                        mRenderer.getAngle() +
-                                ((dx + dy) * TOUCH_SCALE_FACTOR));
+                mRenderer.setAngle(mRenderer.getAngle() + ((dx + dy) * TOUCH_SCALE_FACTOR));
                 requestRender();
         }
 

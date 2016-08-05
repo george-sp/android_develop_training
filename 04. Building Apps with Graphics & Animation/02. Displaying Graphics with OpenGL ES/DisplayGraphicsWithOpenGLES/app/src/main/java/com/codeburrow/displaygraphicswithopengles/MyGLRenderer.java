@@ -39,6 +39,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final float[] mViewMatrix = new float[16];
     private float[] mRotationMatrix = new float[16];
 
+    public volatile float mAngle;
+
     /**
      * Called once to set up the view's OpenGL ES environment.
      *
@@ -139,5 +141,13 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glCompileShader(shader);
 
         return shader;
+    }
+
+    public float getAngle() {
+        return mAngle;
+    }
+
+    public void setAngle(float angle) {
+        mAngle = angle;
     }
 }
