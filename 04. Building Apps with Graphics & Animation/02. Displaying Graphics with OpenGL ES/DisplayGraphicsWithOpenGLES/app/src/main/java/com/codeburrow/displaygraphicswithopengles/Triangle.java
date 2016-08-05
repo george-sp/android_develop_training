@@ -5,6 +5,8 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 /**
+ * A two-dimensional triangle for use as a drawn object in OpenGL ES 1.0/1.1.
+ *
  * OpenGL ES allows you to define drawn objects using coordinates in three-dimensional space.
  * So, before you can draw a triangle, you must define its coordinates.
  * In OpenGL, the typical way to do this is to define a vertex array of floating point numbers for the coordinates.
