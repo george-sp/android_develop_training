@@ -65,6 +65,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 unused) {
         // Redraw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+
+        // Draw the triangle object.
+        mTriangle.draw();
     }
 
     /**
@@ -77,5 +80,24 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
+    }
+
+    /**
+     * Utility method for compiling a OpenGL shader.
+     *
+     * @param type       Vertex or Fragment shader type.
+     * @param shaderCode String containing the shader code.
+     * @return Returns an id for the shader.
+     */
+    public static int loadShader(int type, String shaderCode) {
+        // Create a vertex shader type (GLES20.GL_VERTEX_SHADER)
+        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER).
+        int shader = GLES20.glCreateShader(type);
+
+        // Add the source code to the shader and compile it.
+        GLES20.glShaderSource(shader, shaderCode);
+        GLES20.glCompileShader(shader);
+
+        return shader;
     }
 }
