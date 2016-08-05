@@ -35,9 +35,15 @@ public class Triangle {
      * that must be compiled prior to using it in the OpenGL ES environment.
      */
     private final String vertexShaderCode =
-            "attribute vec4 vPosition;" +
+            // This matrix member variable provides a hook to manipulate
+            // the coordinates of the objects that use this vertex shader
+            "uniform mat4 uMVPMatrix;" +
+                    "attribute vec4 vPosition;" +
                     "void main() {" +
-                    "  gl_Position = vPosition;" +
+                    // the matrix must be included as a modifier of gl_Position
+                    // Note that the uMVPMatrix factor *must be first* in order
+                    // for the matrix multiplication product to be correct.
+                    "  gl_Position = uMVPMatrix * vPosition;" +
                     "}";
     private final String fragmentShaderCode =
             "precision mediump float;" +
@@ -45,6 +51,10 @@ public class Triangle {
                     "void main() {" +
                     "  gl_FragColor = vColor;" +
                     "}";
+
+    // Use to access and set the view transformation
+    private int mMVPMatrixHandle;
+
     private final int mProgram;
     private FloatBuffer vertexBuffer;
 
@@ -108,7 +118,7 @@ public class Triangle {
      * Sets the position and color values to the shape's vertex shader and fragment shader,
      * and the executes the drawing function.
      */
-    public void draw() {
+    public void draw(float[] mvpMatrix) { // pass in the calculated transformation matrix
         // Add program to OpenGL ES environment.
         GLES20.glUseProgram(mProgram);
         // Get handle to vertex shader's vPosition member.
@@ -123,6 +133,10 @@ public class Triangle {
         mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
         // Set color for drawing the triangle.
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
+        // get handle to shape's transformation matrix
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
+        // Pass the projection and view transformation to the shader.
+        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
         // Draw the triangle.
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount);
         // Disable vertex array.
