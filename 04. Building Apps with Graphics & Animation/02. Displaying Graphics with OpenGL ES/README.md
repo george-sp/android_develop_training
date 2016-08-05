@@ -40,3 +40,12 @@ This lesson explains the OpenGL ES coordinate system relative to an Android devi
 
 Being able to define shapes to be drawn in the context of an OpenGL ES view is the first step in creating your high-end graphics masterpiece. Drawing with OpenGL ES can be a little tricky without knowing a few basic things about how OpenGL ES expects you to define graphic objects.
 
+
+#### Drawing Shapes
+Learn how to draw OpenGL shapes in your application.
+
+This lesson explains how to draw the shapes you defined in the previous lesson using the OpenGL ES 2.0 API.
+
+After you define shapes to be drawn with OpenGL, you probably want to draw them. Drawing shapes with the OpenGL ES 2.0 takes a bit more code than you might imagine, because the API provides a great deal of control over the graphics rendering pipeline.
+
+
