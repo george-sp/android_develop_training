@@ -40,7 +40,6 @@ This lesson explains the OpenGL ES coordinate system relative to an Android devi
 
 Being able to define shapes to be drawn in the context of an OpenGL ES view is the first step in creating your high-end graphics masterpiece. Drawing with OpenGL ES can be a little tricky without knowing a few basic things about how OpenGL ES expects you to define graphic objects.
 
-
 #### Drawing Shapes
 Learn how to draw OpenGL shapes in your application.
 
@@ -48,4 +47,12 @@ This lesson explains how to draw the shapes you defined in the previous lesson u
 
 After you define shapes to be drawn with OpenGL, you probably want to draw them. Drawing shapes with the OpenGL ES 2.0 takes a bit more code than you might imagine, because the API provides a great deal of control over the graphics rendering pipeline.
 
+#### Applying Projection and Camera Views
+Learn how to use projection and camera views to get a new perspective on your drawn objects.
 
+
+This lesson describes how to create a projection and camera view and apply it to shapes drawn in your GLSurfaceView.
+
+In the OpenGL ES environment, projection and camera views allow you to display drawn objects in a way that more closely resembles how you see physical objects with your eyes. This simulation of physical viewing is done with mathematical transformations of drawn object coordinates:
+- _**Projection** - This transformation adjusts the coordinates of drawn objects based on the width and height of the [GLSurfaceView](https://developer.android.com/reference/android/opengl/GLSurfaceView.html) where they are displayed. Without this calculation, objects drawn by OpenGL ES are skewed by the unequal proportions of the view window. A projection transformation typically only has to be calculated when the proportions of the OpenGL view are established or changed in the [onSurfaceChanged()](https://developer.android.com/reference/android/opengl/GLSurfaceView.Renderer.html#onSurfaceChanged(javax.microedition.khronos.opengles.GL10, int, int)) method of your renderer. For more information about OpenGL ES projections and coordinate mapping, see [Mapping Coordinates for Drawn Objects](https://developer.android.com/guide/topics/graphics/opengl.html#coordinate-mapping)._
+- _**Camera View** - This transformation adjusts the coordinates of drawn objects based on a virtual camera position. It’s important to note that OpenGL ES does not define an actual camera object, but instead provides utility methods that simulate a camera by transforming the display of drawn objects. A camera view transformation might be calculated only once when you establish your [GLSurfaceView](https://developer.android.com/reference/android/opengl/GLSurfaceView.html), or might change dynamically based on user actions or your application’s function._
