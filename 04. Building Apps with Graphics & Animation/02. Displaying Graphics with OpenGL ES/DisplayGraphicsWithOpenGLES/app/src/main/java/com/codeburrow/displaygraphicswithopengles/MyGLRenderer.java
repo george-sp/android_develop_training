@@ -28,6 +28,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
     private static final String LOG_TAG = MyGLRenderer.class.getSimpleName();
 
+    private Triangle mTriangle;
+    private Square mSquare;
+
     /**
      * Called once to set up the view's OpenGL ES environment.
      *
@@ -38,6 +41,19 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         // Set the background frame color
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+        /*
+         * Before you do any drawing,
+         * you must initialize and load the shapes you plan to draw.
+         * Unless the structure (the original coordinates) of the shapes you use
+         * in your program change during the course of execution,
+         * you should initialize them in the onSurfaceCreated() method of your renderer
+         * for memory and processing efficiency.
+         */
+        // Initialize a triangle.
+        mTriangle = new Triangle();
+        // Initialize a square.
+        mSquare = new Square();
     }
 
     /**
