@@ -32,3 +32,11 @@ A [GLSurfaceView](https://developer.android.com/reference/android/opengl/GLSurfa
 For more information about these classes, see the [OpenGL ES](https://developer.android.com/guide/topics/graphics/opengl.html) developer guide.
 
 _GLSurfaceView is just one way to incorporate OpenGL ES graphics into your application. For a full-screen or near-full screen graphics view, it is a reasonable choice. Developers who want to incorporate OpenGL ES graphics in a small portion of their layouts should take a look at TextureView. For real, do-it-yourself developers, it is also possible to build up an OpenGL ES view using SurfaceView, but this requires writing quite a bit of additional code._
+
+#### Defining Shapes
+Learn how to define shapes and why you need to know about faces and winding.
+
+This lesson explains the OpenGL ES coordinate system relative to an Android device screen, the basics of defining a shape, shape faces, as well as defining a triangle and a square.
+
+Being able to define shapes to be drawn in the context of an OpenGL ES view is the first step in creating your high-end graphics masterpiece. Drawing with OpenGL ES can be a little tricky without knowing a few basic things about how OpenGL ES expects you to define graphic objects.
+
