@@ -50,7 +50,6 @@ After you define shapes to be drawn with OpenGL, you probably want to draw them.
 #### Applying Projection and Camera Views
 Learn how to use projection and camera views to get a new perspective on your drawn objects.
 
-
 This lesson describes how to create a projection and camera view and apply it to shapes drawn in your GLSurfaceView.
 
 In the OpenGL ES environment, projection and camera views allow you to display drawn objects in a way that more closely resembles how you see physical objects with your eyes. This simulation of physical viewing is done with mathematical transformations of drawn object coordinates:
