@@ -18,3 +18,17 @@ Dependencies and prerequisites
 
 You should also read
 - [OpenGL](https://developer.android.com/guide/topics/graphics/opengl.html)
+
+-----------------------------------------------------------
+
+#### Building an OpenGL ES Environment
+- Learn how to set up an Android application to be able to draw OpenGL graphics.
+
+This lesson explains how to complete a minimal implementation of [GLSurfaceView](https://developer.android.com/reference/android/opengl/GLSurfaceView.html) and [GLSurfaceView.Renderer](https://developer.android.com/reference/android/opengl/GLSurfaceView.Renderer.html) in a simple application activity.
+
+In order to draw graphics with OpenGL ES in your Android application, you must create a view container for them. 
+One of the more straight-forward ways to do this is to implement both a [GLSurfaceView](https://developer.android.com/reference/android/opengl/GLSurfaceView.html) and a [GLSurfaceView.Renderer](https://developer.android.com/reference/android/opengl/GLSurfaceView.Renderer.html). 
+A [GLSurfaceView](https://developer.android.com/reference/android/opengl/GLSurfaceView.html) is a view container for graphics drawn with OpenGL and [GLSurfaceView.Renderer](https://developer.android.com/reference/android/opengl/GLSurfaceView.Renderer.html) controls what is drawn within that view. 
+For more information about these classes, see the [OpenGL ES](https://developer.android.com/guide/topics/graphics/opengl.html) developer guide.
+
+_GLSurfaceView is just one way to incorporate OpenGL ES graphics into your application. For a full-screen or near-full screen graphics view, it is a reasonable choice. Developers who want to incorporate OpenGL ES graphics in a small portion of their layouts should take a look at TextureView. For real, do-it-yourself developers, it is also possible to build up an OpenGL ES view using SurfaceView, but this requires writing quite a bit of additional code._
