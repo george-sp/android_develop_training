@@ -93,4 +93,11 @@ Scenes store the state of a view hierarchy, including all its views and their pr
 
 > **Note:** The framework can animate changes in a single view hierarchy without using scenes, as described in [Apply a Transition Without Scenes](https://developer.android.com/training/transitions/transitions.html#NoScenes). However, understanding this lesson is essential to work with transitions.
 
+--------------------------------------------------------------------------
+
+> - **Create a Scene From a Layout Resource**
+>
+> You can create a [`Scene`](https://developer.android.com/reference/android/transition/Scene.html) instance directly from a layout resource file. Use this technique when the view hierarchy in the file is mostly static. The resulting scene represents the state of the view hierarchy at the time you created the [`Scene`](https://developer.android.com/reference/android/transition/Scene.html) instance. If you change the view hierarchy, you have to recreate the scene. The framework creates the scene from the entire view hierarchy in the file; you can not create a scene from part of a layout file.
+> 
+> To create a [`Scene`](https://developer.android.com/reference/android/transition/Scene.html) instance from a layout resource file, retrieve the scene root from your layout as a [`ViewGroup`](https://developer.android.com/reference/android/view/ViewGroup.html) instance and then call the [`Scene.getSceneForLayout()`](https://developer.android.com/reference/android/transition/Scene.html#getSceneForLayout(android.view.ViewGroup, int, android.content.Context)) method with the scene root and the resource ID of the layout file that contains the view hierarchy for the scene.
 
