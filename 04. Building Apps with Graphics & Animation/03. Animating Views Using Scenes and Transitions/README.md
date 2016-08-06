@@ -141,3 +141,16 @@ Learn how to apply a transition between two scenes of a view hierarchy.
 This lesson teaches you run an animation between two scenes using built-in transitions to move, resize, and fade views. The next lesson shows you how to define custom transitions.
 
 In the transitions framework, animations create a series of frames that depict a change between the view hierarchies in the starting and ending scenes. The framework represents these animations as transition objects, which contain information about an animation. To run an animation, you provide the transition to use and the ending scene to a transition manager.
+
+> - **Create a Transition**
+>
+> In the previous lesson, you learned how to create scenes that represent the state of different view hierarchies. Once you have defined the starting scene and the ending scene you want to change between, you need to create a Transition object that defines an animation. The framework enables you to specify a built-in transition in a resource file and inflate it in your code or to create an instance of a built-in transition directly in your code.
+
+**Build-in transition types:**
+
+| Class        | Tag          | Attributes  | Effect |
+| ------------- |:-------------:|:-------------:| :------------- |
+| [AutoTransition](https://developer.android.com/reference/android/transition/AutoTransition.html) | `<autoTransition/>` | - | Default transition. Fade out, move and resize, and fade in views, in that order. |
+| [Fade](https://developer.android.com/reference/android/transition/Fade.html)      | `<fade/>` |  ```android:fadingMode="[fade_in | fade out | fade_in_out]"``` | `fade_in` fades in views<br>`fade_out` fades out views<br>`fade_in_out` (default) does a fade_out followed by a fade_in. |
+| [ChangeBounds](https://developer.android.com/reference/android/transition/ChangeBounds.html) | `<changeBounds/>`	 | - | Moves and resizes views.
+
