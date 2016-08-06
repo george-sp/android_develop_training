@@ -115,4 +115,9 @@ Scenes store the state of a view hierarchy, including all its views and their pr
 >> - Generate Scenes from Layouts
 >>
 >> After you create definitions for the two relative layouts, you can obtain an scene for each of them. This enables you to later transition between the two UI configurations. To obtain a scene, you need a reference to the scene root and the layout resource ID.
-
+>
+> - **Create a Scene in Your Code**
+>
+> You can also create a [`Scene`](https://developer.android.com/reference/android/transition/Scene.html) instance in your code from a [`ViewGroup`](https://developer.android.com/reference/android/view/ViewGroup.html) object. Use this technique when you modify the view hierarchies directly in your code or when you generate them dynamically.
+>
+> To create a scene from a view hierarchy in your code, use the [`Scene(sceneRoot, viewHierarchy)`](https://developer.android.com/reference/android/transition/Scene.html#Scene(android.view.ViewGroup, android.view.View)) constructor. Calling this constructor is equivalent to calling the [`Scene.getSceneForLayout()`](https://developer.android.com/reference/android/transition/Scene.html#getSceneForLayout(android.view.ViewGroup, int, android.content.Context)) method when you have already inflated a layout file.
