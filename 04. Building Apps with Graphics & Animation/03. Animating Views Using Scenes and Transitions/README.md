@@ -1,3 +1,4 @@
+
 ### Animating Views Using Scenes and Transitions
 Learn how to animate state changes in a view hierarchy using transitions.
 
@@ -104,9 +105,14 @@ Scenes store the state of a view hierarchy, including all its views and their pr
 >>
 >> The code snippets in the rest of this section show you how to create two different scenes with the same scene root element. The snippets also demonstrate that you can load multiple unrelated Scene objects without implying that they are related to each other.
 >>
->>The example consists of the following layout definitions:
->> - The main layout of an activity with a text label and a child layout.
->> - A relative layout for the first scene with two text fields.
->> - A relative layout for the second scene with the same two text fields in different order.
+>> The example consists of the following layout definitions:
+>>  1. The main layout of an activity with a text label and a child layout.
+>>  2. A relative layout for the first scene with two text fields.
+>>  3. A relative layout for the second scene with the same two text fields in different order.
 >>
->>The example is designed so that all of the animation occurs within the child layout of the main layout for the activity. The text label in the main layout remains static.
+>> The example is designed so that all of the animation occurs within the child layout of the main layout for the activity. The text label in the main layout remains static.
+>>
+>> - Generate Scenes from Layouts
+>>
+>> After you create definitions for the two relative layouts, you can obtain an scene for each of them. This enables you to later transition between the two UI configurations. To obtain a scene, you need a reference to the scene root and the layout resource ID.
+
