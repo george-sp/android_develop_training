@@ -134,3 +134,10 @@ Scenes store the state of a view hierarchy, including all its views and their pr
 >To provide custom scene actions, define your actions as [Runnable](https://developer.android.com/reference/java/lang/Runnable.html) objects and pass them to the [`Scene.setExitAction()`](https://developer.android.com/reference/android/transition/Scene.html#setExitAction(java.lang.Runnable)) or [`Scene.setEnterAction()`](https://developer.android.com/reference/android/transition/Scene.html#setEnterAction(java.lang.Runnable)) methods. The framework calls the [`setExitAction()`](https://developer.android.com/reference/android/transition/Scene.html#setExitAction(java.lang.Runnable)) method on the starting scene before running the transition animation and the [`setEnterAction()`](https://developer.android.com/reference/android/transition/Scene.html#setEnterAction(java.lang.Runnable)) method on the ending scene after running the transition animation.
 >
 >> **Note:** Do not use scene actions to pass data between views in the starting and ending scenes. For more information, see [Defining Transition Lifecycle Callbacks](https://developer.android.com/training/transitions/transitions.html#Callbacks).
+
+#### Applying a Transition
+Learn how to apply a transition between two scenes of a view hierarchy.
+
+This lesson teaches you run an animation between two scenes using built-in transitions to move, resize, and fade views. The next lesson shows you how to define custom transitions.
+
+In the transitions framework, animations create a series of frames that depict a change between the view hierarchies in the starting and ending scenes. The framework represents these animations as transition objects, which contain information about an animation. To run an animation, you provide the transition to use and the ending scene to a transition manager.
