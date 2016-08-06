@@ -100,4 +100,13 @@ Scenes store the state of a view hierarchy, including all its views and their pr
 > You can create a [`Scene`](https://developer.android.com/reference/android/transition/Scene.html) instance directly from a layout resource file. Use this technique when the view hierarchy in the file is mostly static. The resulting scene represents the state of the view hierarchy at the time you created the [`Scene`](https://developer.android.com/reference/android/transition/Scene.html) instance. If you change the view hierarchy, you have to recreate the scene. The framework creates the scene from the entire view hierarchy in the file; you can not create a scene from part of a layout file.
 > 
 > To create a [`Scene`](https://developer.android.com/reference/android/transition/Scene.html) instance from a layout resource file, retrieve the scene root from your layout as a [`ViewGroup`](https://developer.android.com/reference/android/view/ViewGroup.html) instance and then call the [`Scene.getSceneForLayout()`](https://developer.android.com/reference/android/transition/Scene.html#getSceneForLayout(android.view.ViewGroup, int, android.content.Context)) method with the scene root and the resource ID of the layout file that contains the view hierarchy for the scene.
-
+>> - Define Layouts for Scenes
+>>
+>> The code snippets in the rest of this section show you how to create two different scenes with the same scene root element. The snippets also demonstrate that you can load multiple unrelated Scene objects without implying that they are related to each other.
+>>
+>>The example consists of the following layout definitions:
+>> - The main layout of an activity with a text label and a child layout.
+>> - A relative layout for the first scene with two text fields.
+>> - A relative layout for the second scene with the same two text fields in different order.
+>>
+>>The example is designed so that all of the animation occurs within the child layout of the main layout for the activity. The text label in the main layout remains static.
