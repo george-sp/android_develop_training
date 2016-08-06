@@ -53,7 +53,7 @@ The framework has the following features:
 >
 > - **Scenes**
 >
-> A [`scene`](https://developer.android.com/reference/android/transition/Scene.html) stores the state of a view hierarchy, including all its views and their property values. A view hierarchy can be a simple view or a complex tree of views and child layouts. Storing the view hierarchy state in a scene enables you to transition into that state from another scene. The framework provides the Scene class to represent a scene.
+> A [`Scene`](https://developer.android.com/reference/android/transition/Scene.html) stores the state of a view hierarchy, including all its views and their property values. A view hierarchy can be a simple view or a complex tree of views and child layouts. Storing the view hierarchy state in a scene enables you to transition into that state from another scene. The framework provides the Scene class to represent a scene.
 > 
 > The transitions framework lets you create scenes from layout resource files or from [`ViewGroup`](https://developer.android.com/reference/android/view/ViewGroup.html) objects in your code. Creating a scene in your code is useful if you generated a view hierarchy dynamically or if you are modifying it at runtime.
 > 
@@ -83,3 +83,14 @@ The framework has the following features:
 > 2. Some specific transition types may not produce the desired animation effect when applied to a [`TextureView`](https://developer.android.com/reference/android/view/TextureView.html).
 > 3. Classes that extend [`AdapterView`](https://developer.android.com/reference/android/widget/AdapterView.html), such as [`ListView`](https://developer.android.com/reference/android/widget/ListView.html), manage their child views in ways that are incompatible with the transitions framework. If you try to animate a view based on [`AdapterView`](https://developer.android.com/reference/android/widget/AdapterView.html), the device display may hang.
 > 4. If you try to resize a [`TextView`](https://developer.android.com/reference/android/widget/TextView.html) with an animation, the text will pop to a new location before the object has completely resized. To avoid this problem, do not animate the resizing of views that contain text.
+
+#### Creating a Scene
+Learn how to create a scene to store the state of a view hierarchy.
+
+This lesson shows you how to create scenes in your app and how to define scene actions. The next lesson shows you how to transition between two scenes.
+
+Scenes store the state of a view hierarchy, including all its views and their property values. The transitions framework can run animations between a starting and an ending scene. The starting scene is often determined automatically from the current state of the user interface. For the ending scene, the framework enables you to create a scene from a layout resource file or from a group of views in your code.
+
+> **Note:** The framework can animate changes in a single view hierarchy without using scenes, as described in [Apply a Transition Without Scenes](https://developer.android.com/training/transitions/transitions.html#NoScenes). However, understanding this lesson is essential to work with transitions.
+
+
