@@ -121,3 +121,16 @@ Scenes store the state of a view hierarchy, including all its views and their pr
 > You can also create a [`Scene`](https://developer.android.com/reference/android/transition/Scene.html) instance in your code from a [`ViewGroup`](https://developer.android.com/reference/android/view/ViewGroup.html) object. Use this technique when you modify the view hierarchies directly in your code or when you generate them dynamically.
 >
 > To create a scene from a view hierarchy in your code, use the [`Scene(sceneRoot, viewHierarchy)`](https://developer.android.com/reference/android/transition/Scene.html#Scene(android.view.ViewGroup, android.view.View)) constructor. Calling this constructor is equivalent to calling the [`Scene.getSceneForLayout()`](https://developer.android.com/reference/android/transition/Scene.html#getSceneForLayout(android.view.ViewGroup, int, android.content.Context)) method when you have already inflated a layout file.
+>
+> - **Create Scene Actions**
+>
+> The framework enables you to define custom scene actions that the system runs when entering or exiting a scene. In many cases, defining custom scene actions is not necessary, since the framework animates the change between scenes automatically.
+>
+> Scene actions are useful for handling these cases:
+>
+> 1. Animate views that are not in the same hierarchy. You can animate views for both the starting and ending scenes using exit and entry scene actions.
+> 2. Animate views that the transitions framework cannot animate automatically, such as [`ListView`](https://developer.android.com/reference/android/widget/ListView.html) objects. For more information, see [`Limitations`](https://developer.android.com/training/transitions/overview.html#Limitations).
+>
+>To provide custom scene actions, define your actions as [Runnable](https://developer.android.com/reference/java/lang/Runnable.html) objects and pass them to the [`Scene.setExitAction()`](https://developer.android.com/reference/android/transition/Scene.html#setExitAction(java.lang.Runnable)) or [`Scene.setEnterAction()`](https://developer.android.com/reference/android/transition/Scene.html#setEnterAction(java.lang.Runnable)) methods. The framework calls the [`setExitAction()`](https://developer.android.com/reference/android/transition/Scene.html#setExitAction(java.lang.Runnable)) method on the starting scene before running the transition animation and the [`setEnterAction()`](https://developer.android.com/reference/android/transition/Scene.html#setEnterAction(java.lang.Runnable)) method on the ending scene after running the transition animation.
+>
+>> **Note:** Do not use scene actions to pass data between views in the starting and ending scenes. For more information, see [Defining Transition Lifecycle Callbacks](https://developer.android.com/training/transitions/transitions.html#Callbacks).
