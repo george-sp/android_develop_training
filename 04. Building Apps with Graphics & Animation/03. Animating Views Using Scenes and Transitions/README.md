@@ -15,3 +15,25 @@ You should also read
 
 Video
 - [DevBytes: Android 4.4 Transitions](https://developer.android.com/training/transitions/index.html)
+
+-----------------------------------------------------------
+
+#### The Transitions Framework
+Learn the main features and components of the transitions framework.
+
+Animating your app's user interface provides more than just visual appeal. Animations highlight changes and provide visual cues that help users learn how your app works.
+
+To help you animate a change between one view hierarchy and another, Android provides the transitions framework. This framework applies one or more animations to all the views in the hierarchies as it changes between them.
+
+The framework has the following features:
+- _Group-level animations_
+	Applies one or more animation effects to all of the views in a view hierarchy.
+- _Transition-based animation_
+	Runs animations based on the changes between starting and ending view property values.
+- _Built-in animations_
+	Includes predefined animations for common effects such as fade out or movement.
+- _Resource file support_
+	Loads view hierarchies and built-in animations from layout resource files.
+- _Lifecycle callbacks_
+	Defines callbacks that provide finer control over the animation and hierarchy change process.
+
