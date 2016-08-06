@@ -37,3 +37,16 @@ The framework has the following features:
 - _Lifecycle callbacks_
 	Defines callbacks that provide finer control over the animation and hierarchy change process.
 
+> **Overview**
+> The example in Figure 1 shows how an animation provides visual cues to help the user. As the app changes from its search entry screen to its search results screen, it fades out views that are no longer in use and fades in new views.
+> 
+> This animation is an example of using the transitions framework. The framework animates changes to all the views in two view hierarchies. A view hierarchy can be as simple as a single view or as complex as a ViewGroup containing an elaborate tree of views. The framework animates each view by changing one or more of its property values over time between the initial or starting view hierarchy and the final or ending view hierarchy.
+> 
+> The transitions framework works in parallel with view hierarchies and animations. The purpose of the framework is to store the state of view hierarchies, change between these hierarchies in order to modify the appearance of the device screen, and animate the change by storing and applying animation definitions.
+> 
+> The diagram in Figure 2 illustrates the relationship between view hierarchies, framework objects, and animations:
+> 
+> 
+> Figure 2. Relationships in the transitions framework.
+> 
+> The transitions framework provides abstractions for scenes, transitions, and transition managers. These are described in detail in the following sections. To use the framework, you create scenes for the view hierarchies in your app that you plan to change between. Next, you create a transition for each animation you want to use. To start the animation between two view hierarchies, you use a transition manager specifying the transition to use and the ending scene. This procedure is described in detail in the remaining lessons in this class.
