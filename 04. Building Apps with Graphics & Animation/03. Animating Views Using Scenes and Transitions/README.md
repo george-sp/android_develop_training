@@ -145,12 +145,20 @@ In the transitions framework, animations create a series of frames that depict a
 > - **Create a Transition**
 >
 > In the previous lesson, you learned how to create scenes that represent the state of different view hierarchies. Once you have defined the starting scene and the ending scene you want to change between, you need to create a Transition object that defines an animation. The framework enables you to specify a built-in transition in a resource file and inflate it in your code or to create an instance of a built-in transition directly in your code.
-
-**Build-in transition types:**
-
+>
+> **Build-in transition types:**
+>
 | Class        | Tag          | Attributes  | Effect |
 | ------------- |:-------------:|:-------------:| :------------- |
 | [AutoTransition](https://developer.android.com/reference/android/transition/AutoTransition.html) | `<autoTransition/>` | - | Default transition. Fade out, move and resize, and fade in views, in that order. |
 | [Fade](https://developer.android.com/reference/android/transition/Fade.html)      | `<fade/>` |  ```android:fadingMode="[fade_in | fade out | fade_in_out]"``` | `fade_in` fades in views<br>`fade_out` fades out views<br>`fade_in_out` (default) does a fade_out followed by a fade_in. |
 | [ChangeBounds](https://developer.android.com/reference/android/transition/ChangeBounds.html) | `<changeBounds/>`	 | - | Moves and resizes views.
-
+>> - Create a transition instance from a resource file
+>>
+>> This technique enables you to modify your transition definition without having to change the code of your activity. This technique is also useful to separate complex transition definitions from your application code, as shown in [Specify Multiple Transitions](https://developer.android.com/training/transitions/transitions.html#Multiple).
+>>
+>> To specify a built-in transition in a resource file, follow these steps:
+>>
+>> 1. Add the `res/transition/` directory to your project.
+>> 2. Create a new XML resource file inside this directory.
+>> 3. Add an XML node for one of the built-in transitions.
