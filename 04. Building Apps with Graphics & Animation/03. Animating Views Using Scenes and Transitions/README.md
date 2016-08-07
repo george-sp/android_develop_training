@@ -191,5 +191,15 @@ In the transitions framework, animations create a series of frames that depict a
 > Each view that the transition animates is called a _target_. You can only select targets that are part of the view hierarchy associated with a scene.
 >
 > To remove one or more views from the list of targets, call the [`removeTarget()`](https://developer.android.com/reference/android/transition/Transition.html#removeTarget(android.view.View)) method before starting the transition. To add only the views you specify to the list of targets, call the [`addTarget()`](https://developer.android.com/reference/android/transition/Transition.html#addTarget(android.view.View)) method. For more information, see the API reference for the [`Transition`](https://developer.android.com/reference/android/transition/Transition.html) class.
+>
+> - **Specify Multiple Transitions**
+>
+> To get the most impact from an animation, you should match it to the type of changes that occur between the scenes. For example, if you are removing some views and adding others between scenes, a fade out/fade in animation provides a noticeable indication that some views are no longer available. If you are moving views to different points on the screen, a better choice would be to animate the movement so that users notice the new location of the views.
+>
+> You do not have to choose only one animation, since the transitions framework enables you to combine animation effects in a transition set that contains a group of individual built-in or custom transitions.
+>
+> To define a transition set from a collection of transitions in XML, create a resource file in the `res/transitions/` directory and list the transitions under the `transitionSet` element.
+>
+> To inflate the transition set into a [`TransitionSet`](https://developer.android.com/reference/android/transition/TransitionSet.html) object in your code, call the [`TransitionInflater.from()`](https://developer.android.com/reference/android/transition/TransitionInflater.html#from(android.content.Context)) method in your activity. The [`TransitionSet`](https://developer.android.com/reference/android/transition/TransitionSet.html) class extends from the [`Transition`](https://developer.android.com/reference/android/transition/Transition.html) class, so you can use it with a transition manager just like any other [`Transition`](https://developer.android.com/reference/android/transition/Transition.html) instance.
 
 
