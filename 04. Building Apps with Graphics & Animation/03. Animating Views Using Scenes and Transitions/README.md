@@ -159,6 +159,12 @@ In the transitions framework, animations create a series of frames that depict a
 >>
 >> To specify a built-in transition in a resource file, follow these steps:
 >>
->> 1. Add the `res/transition/` directory to your project.
->> 2. Create a new XML resource file inside this directory.
->> 3. Add an XML node for one of the built-in transitions.
+>>  1. Add the `res/transition/` directory to your project.
+>>  2. Create a new XML resource file inside this directory.
+>>  3. Add an XML node for one of the built-in transitions.
+>>
+>> - Create a transition instance in your code
+>>
+>> This technique is useful for creating transition objects dynamically if you modify the user interface in your code, and to create simple built-in transition instances with few or no parameters.
+>>
+>> To create an instance of a built-in transition, invoke one of the public constructors in the subclasses of the [Transition](https://developer.android.com/reference/android/transition/Transition.html) class.

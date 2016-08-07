@@ -4,6 +4,7 @@ package com.codeburrow.animateviews;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Fade;
 import android.transition.Scene;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
@@ -50,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
             mASceneInCode = new Scene(mSceneRoot, mViewHierarchy);
         }
 
+        // Create a transition instance from a resource file.
         mFadeTransition = TransitionInflater.from(this).inflateTransition(R.transition.fade_transition);
-
+        // Create a transition instance in your code.
+        Transition mFadeTransitionInCode = new Fade();
     }
 }
