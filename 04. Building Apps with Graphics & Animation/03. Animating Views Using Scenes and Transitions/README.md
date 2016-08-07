@@ -201,5 +201,15 @@ In the transitions framework, animations create a series of frames that depict a
 > To define a transition set from a collection of transitions in XML, create a resource file in the `res/transitions/` directory and list the transitions under the `transitionSet` element.
 >
 > To inflate the transition set into a [`TransitionSet`](https://developer.android.com/reference/android/transition/TransitionSet.html) object in your code, call the [`TransitionInflater.from()`](https://developer.android.com/reference/android/transition/TransitionInflater.html#from(android.content.Context)) method in your activity. The [`TransitionSet`](https://developer.android.com/reference/android/transition/TransitionSet.html) class extends from the [`Transition`](https://developer.android.com/reference/android/transition/Transition.html) class, so you can use it with a transition manager just like any other [`Transition`](https://developer.android.com/reference/android/transition/Transition.html) instance.
-
-
+>
+> - **Apply a Transition Without Scenes**
+>
+> Changing view hierarchies is not the only way to modify your user interface. You can also make changes by adding, modifying, and removing child views within the current hierarchy. For example, you can implement a search interaction with just a single layout. Start with the layout showing a search entry field and a search icon. To change the user interface to show the results, remove the search button when the user clicks it by calling the [`ViewGroup.removeView()`](https://developer.android.com/reference/android/view/ViewGroup.html#removeView(android.view.View)) method, and add the search results by calling [`ViewGroup.addView()`](https://developer.android.com/reference/android/view/ViewGroup.html#addView(android.view.View)) method.
+>
+> If you make changes within the current view hierarchy in this fashion, you do not need to create a scene. Instead, you can create and apply a transition between two states of a view hierarchy using a _delayed transition_. This feature of the transitions framework starts with the current view hierarchy state, records changes you make to its views, and applies a transition that animates the changes when the system redraws the user interface.
+>
+> To create a delayed transition within a single view hierarchy, follow these steps:
+> 
+> 1. When the event that triggers the transition occurs, call the [`TransitionManager.beginDelayedTransition()`](https://developer.android.com/reference/android/transition/TransitionManager.html#beginDelayedTransition(android.view.ViewGroup)) method providing the parent view of all the views you want to change and the transition to use. The framework stores the current state of the child views and their property values.
+> 2. Make changes to the child views as required by your use case. The framework records the changes you make to the child views and their properties.
+> 3. When the system redraws the user interface according to your changes, the framework animates the changes between the original state and the new state.

@@ -4,12 +4,14 @@ package com.codeburrow.animateviews;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Fade;
 import android.transition.Scene;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
     // Create a Transaction instance from a resource file.
     Transition mFadeTransition;
+
+    private TextView mLabelText;
+    private Fade mFade;
+    private ViewGroup mRootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,5 +66,24 @@ public class MainActivity extends AppCompatActivity {
         mEndingScene = mAnotherScene;
         // Apply a Transition.
         TransitionManager.go(mEndingScene, mFadeTransition);
+
+        // Create a new TextView and set some View properties
+        mLabelText = new TextView(this);
+        mLabelText.setText("Label");
+        mLabelText.setId(1);
+
+        // Get the root view and create a transition
+        mRootView = mSceneRoot;
+        mFade = new Fade(Fade.IN);
+
+        // Start recording changes to the view hierarchy
+        TransitionManager.beginDelayedTransition(mRootView, mFade);
+
+        // Add the new TextView to the view hierarchy
+        mRootView.addView(mLabelText);
+
+        // When the system redraws the screen to show this update,
+        // the framework will animate the addition as a fade in
+
     }
 }
