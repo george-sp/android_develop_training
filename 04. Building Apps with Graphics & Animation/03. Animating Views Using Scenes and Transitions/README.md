@@ -237,3 +237,9 @@ _A custom transition enables you to create an animation that is not available fr
 > 3. [`createAnimator(ViewGroup sceneRoot,
                                    TransitionValues startValues,
                                    TransitionValues endValues)`](https://developer.android.com/reference/android/transition/Transition.html#createAnimator(android.view.ViewGroup, android.transition.TransitionValues, android.transition.TransitionValues))
+>
+> - **Capture View Property Values**
+>
+> Transition animations use the property animation system described in [Property Animation](https://developer.android.com/guide/topics/graphics/prop-animation.html). Property animations change a view property between a starting and ending value over a specified period of time, so the framework needs to have both the starting and ending value of the property to construct the animation.
+>
+> However, a property animation usually needs only a small subset of all the view's property values. For example, a color animation needs color property values, while a movement animation needs position property values. Since the property values needed for an animation are specific to a transition, the transitions framework does not provide every property value to a transition. Instead, the framework invokes callback methods that allow a transition to capture only the property values it needs and store them in the framework.
