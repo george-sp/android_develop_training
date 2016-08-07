@@ -243,3 +243,10 @@ _A custom transition enables you to create an animation that is not available fr
 > Transition animations use the property animation system described in [Property Animation](https://developer.android.com/guide/topics/graphics/prop-animation.html). Property animations change a view property between a starting and ending value over a specified period of time, so the framework needs to have both the starting and ending value of the property to construct the animation.
 >
 > However, a property animation usually needs only a small subset of all the view's property values. For example, a color animation needs color property values, while a movement animation needs position property values. Since the property values needed for an animation are specific to a transition, the transitions framework does not provide every property value to a transition. Instead, the framework invokes callback methods that allow a transition to capture only the property values it needs and store them in the framework.
+>> - Capture Starting Values
+>>
+>> To pass the starting view values to the framework, implement the [`captureStartValues(transitionValues)`](https://developer.android.com/reference/android/transition/Transition.html#captureStartValues(android.transition.TransitionValues)) method. The framework calls this method for every view in the starting scene. The method argument is a [`TransitionValues`](https://developer.android.com/reference/android/transition/TransitionValues.html) object that contains a reference to the view and a [`Map`](https://developer.android.com/reference/java/util/Map.html) instance in which you can store the view values you want. In your implementation, retrieve these property values and pass them back to the framework by storing them in the map.
+>>
+>> To ensure that the key for a property value does not conflict with other [`TransitionValues`](https://developer.android.com/reference/android/transition/TransitionValues.html) keys, use the following naming scheme:
+>>
+>> `package_name:transition_name:property_name`
