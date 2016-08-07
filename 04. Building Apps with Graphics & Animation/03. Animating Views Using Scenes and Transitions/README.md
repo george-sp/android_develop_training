@@ -167,7 +167,7 @@ In the transitions framework, animations create a series of frames that depict a
 >>
 >> This technique is useful for creating transition objects dynamically if you modify the user interface in your code, and to create simple built-in transition instances with few or no parameters.
 >>
->> To create an instance of a built-in transition, invoke one of the public constructors in the subclasses of the [Transition](https://developer.android.com/reference/android/transition/Transition.html) class. For example, the following code snippet creates an instance of the Fade transition:
+>> To create an instance of a built-in transition, invoke one of the public constructors in the subclasses of the [`Transition`](https://developer.android.com/reference/android/transition/Transition.html) class. For example, the following code snippet creates an instance of the [`Fade`](https://developer.android.com/reference/android/transition/Fade.html) transition:
 >>
 >> ```Transition mFadeTransition = new Fade();```
 
@@ -176,10 +176,20 @@ In the transitions framework, animations create a series of frames that depict a
 >
 > You typically apply a transition to change between different view hierarchies in response to an event, such as a user action. For example, consider a search app: when the user enters a search term and clicks the search button, the app changes to the scene that represents the results layout while applying a transition that fades out the search button and fades in the search results.
 >
-> To make a scene change while applying a transition in response to some event in your activity, call the [TransitionManager.go()](https://developer.android.com/reference/android/transition/TransitionManager.html#go(android.transition.Scene)) static method with the ending scene and the transition instance to use for the animation, as shown in the following snippet:
+> To make a scene change while applying a transition in response to some event in your activity, call the [`TransitionManager.go()`](https://developer.android.com/reference/android/transition/TransitionManager.html#go(android.transition.Scene)) static method with the ending scene and the transition instance to use for the animation, as shown in the following snippet:
 >
 > ```TransitionManager.go(mEndingScene, mFadeTransition);```
 >
 > The framework changes the view hierarchy inside the scene root with the view hierarchy from the ending scene while running the animation specified by the transition instance. The starting scene is the ending scene from the last transition. If there was no previous transition, the starting scene is determined automatically from the current state of the user interface.
 >
-> If you do not specify a transition instance, the transition manager can apply an automatic transition that does something reasonable for most situations. For more information, see the API reference for the [TransitionManager](https://developer.android.com/reference/android/transition/TransitionManager.html) class.
+> If you do not specify a transition instance, the transition manager can apply an automatic transition that does something reasonable for most situations. For more information, see the API reference for the [`TransitionManager`](https://developer.android.com/reference/android/transition/TransitionManager.html) class.
+>
+> - **Choose Specific Target Views**
+>
+> The framework applies transitions to all views in the starting and ending scenes by default. In some cases, you may only want to apply an animation to a subset of views in a scene. For example, the framework does not support animating changes to [`ListView`](https://developer.android.com/reference/android/widget/ListView.html) objects, so you should not try to animate them during a transition. The framework enables you to select specific views you want to animate.
+>
+> Each view that the transition animates is called a _target_. You can only select targets that are part of the view hierarchy associated with a scene.
+>
+> To remove one or more views from the list of targets, call the [`removeTarget()`](https://developer.android.com/reference/android/transition/Transition.html#removeTarget(android.view.View)) method before starting the transition. To add only the views you specify to the list of targets, call the [`addTarget()`](https://developer.android.com/reference/android/transition/Transition.html#addTarget(android.view.View)) method. For more information, see the API reference for the [`Transition`](https://developer.android.com/reference/android/transition/Transition.html) class.
+
+
