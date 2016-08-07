@@ -228,3 +228,12 @@ Learn how to create other animation effects not included in the transitions fram
 This lesson teaches you to capture property values and generate animations to create custom transitions.
 
 _A custom transition enables you to create an animation that is not available from any of the built-in transition classes. For example, you can define a custom transition that turns the foreground color of text and input fields to gray to indicate that the fields are disabled in the new screen. This type of change helps users see the fields you disabled._
+> - **Extend the Transition Class**
+>
+> To create a custom transition, add a class to your project that extends the [`Transition`](https://developer.android.com/reference/android/transition/Transition.html) class and override the methods shown:
+>
+> 1. [`captureStartValues(TransitionValues values)`](https://developer.android.com/reference/android/transition/Transition.html#captureStartValues(android.transition.TransitionValues))
+> 2. [`captureEndValues(TransitionValues values)`](https://developer.android.com/reference/android/transition/Transition.html#captureEndValues(android.transition.TransitionValues))
+> 3. [`createAnimator(ViewGroup sceneRoot,
+                                   TransitionValues startValues,
+                                   TransitionValues endValues)`](https://developer.android.com/reference/android/transition/Transition.html#createAnimator(android.view.ViewGroup, android.transition.TransitionValues, android.transition.TransitionValues))
