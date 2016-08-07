@@ -250,3 +250,9 @@ _A custom transition enables you to create an animation that is not available fr
 >> To ensure that the key for a property value does not conflict with other [`TransitionValues`](https://developer.android.com/reference/android/transition/TransitionValues.html) keys, use the following naming scheme:
 >>
 >> `package_name:transition_name:property_name`
+>>
+>> - **Capture Ending Values**
+>>
+>> The framework calls the [`captureEndValues(TransitionValues)`](https://developer.android.com/reference/android/transition/Transition.html#captureEndValues(android.transition.TransitionValues)) method once for every target view in the ending scene. In all other respects, [`captureEndValues()`](https://developer.android.com/reference/android/transition/Transition.html#captureEndValues(android.transition.TransitionValues)) works the same as [`captureStartValues()`](https://developer.android.com/reference/android/transition/Transition.html#captureStartValues(android.transition.TransitionValues)).
+>>
+>> In this example, both the [`captureStartValues()`](https://developer.android.com/reference/android/transition/Transition.html#captureStartValues(android.transition.TransitionValues)) and [`captureEndValues()`](https://developer.android.com/reference/android/transition/Transition.html#captureEndValues(android.transition.TransitionValues)) methods invoke `captureValues()` to retrieve and store values. The view property that `captureValues()` retrieves is the same, but it has different values in the starting and ending scenes. The framework maintains separate maps for the starting and ending states of a view.

@@ -31,7 +31,8 @@ public class CustomTransition extends Transition {
     }
 
     @Override
-    public void captureEndValues(TransitionValues values) {
+    public void captureEndValues(TransitionValues transitionValues) {
+        captureValues(transitionValues);
     }
 
     @Override
