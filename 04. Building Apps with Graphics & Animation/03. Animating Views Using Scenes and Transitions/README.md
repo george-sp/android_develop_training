@@ -221,3 +221,10 @@ In the transitions framework, animations create a series of frames that depict a
 > Transition lifecycle callbacks are useful, for example, for copying a view property value from the starting view hierarchy to the ending view hierarchy during a scene change. You cannot simply copy the value from its starting view to the view in the ending view hierarchy, because the ending view hierarchy is not inflated until the transition is completed. Instead, you need to store the value in a variable and then copy it into the ending view hierarchy when the framework has finished the transition. To get notified when the transition is completed, you can implement the [`TransitionListener.onTransitionEnd()`](https://developer.android.com/reference/android/transition/Transition.TransitionListener.html#onTransitionEnd(android.transition.Transition)) method in your activity.
 >
 > For more information, see the API reference for the [`TransitionListener`](https://developer.android.com/reference/android/transition/Transition.TransitionListener.html) class.
+
+#### Creating Custom Transitions
+Learn how to create other animation effects not included in the transitions framework.
+
+This lesson teaches you to capture property values and generate animations to create custom transitions.
+
+_A custom transition enables you to create an animation that is not available from any of the built-in transition classes. For example, you can define a custom transition that turns the foreground color of text and input fields to gray to indicate that the fields are disabled in the new screen. This type of change helps users see the fields you disabled._
