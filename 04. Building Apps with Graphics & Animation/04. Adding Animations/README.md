@@ -84,3 +84,7 @@ ViewPager mPager = (ViewPager) findViewById(R.id.pager);
 ...
 mPager.setPageTransformer(true, new ZoomOutPageTransformer());
 ```
+>
+>> - Zoom-out page transformer
+>>
+>> This page transformer shrinks and fades pages when scrolling between adjacent pages. As a page gets closer to the center, it grows back to its normal size and fades in.
