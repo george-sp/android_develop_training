@@ -53,3 +53,7 @@ Screen slides are transitions between one entire screen to another and are commo
 > **Create the Views**
 >
 > Create a layout file that you'll later use for the content of a fragment. The following example contains a text view to display some text.
+>
+> **Create the Fragment**
+>
+> Create a [`Fragment`](https://developer.android.com/reference/android/support/v4/app/Fragment.html) class that returns the layout that you just created in the [`onCreateView()`](https://developer.android.com/reference/android/app/Fragment.html#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)) method. You can then create instances of this fragment in the parent activity whenever you need a new page to display to the user
