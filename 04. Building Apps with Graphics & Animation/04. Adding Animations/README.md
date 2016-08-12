@@ -98,3 +98,8 @@ mPager.setPageTransformer(true, new ZoomOutPageTransformer());
 >> ```
 view.setTranslationX(-1 * view.getWidth() * position);
 ```
+
+#### Displaying Card Flip Animations
+Learn how to animate between two views with a flipping motion.
+
+This lesson shows you how to do a card flip animation with custom fragment animations. Card flips animate between views of content by showing an animation that emulates a card flipping over.
