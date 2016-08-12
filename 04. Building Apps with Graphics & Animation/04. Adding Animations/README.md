@@ -57,3 +57,14 @@ Screen slides are transitions between one entire screen to another and are commo
 > **Create the Fragment**
 >
 > Create a [`Fragment`](https://developer.android.com/reference/android/support/v4/app/Fragment.html) class that returns the layout that you just created in the [`onCreateView()`](https://developer.android.com/reference/android/app/Fragment.html#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)) method. You can then create instances of this fragment in the parent activity whenever you need a new page to display to the user
+>
+> **Add a ViewPager**
+>
+> [`ViewPagers`](https://developer.android.com/reference/android/support/v4/view/ViewPager.html) have built-in swipe gestures to transition through pages, and they display screen slide animations by default, so you don't need to create any. [`ViewPagers`](https://developer.android.com/reference/android/support/v4/view/ViewPager.html) use [`PagerAdapters`](https://developer.android.com/reference/android/support/v4/view/PagerAdapter.html) as a supply for new pages to display, so the [`PagerAdapters`](https://developer.android.com/reference/android/support/v4/view/PagerAdapter.html) will use the fragment class that you created earlier.
+>
+> Create an activity that does the following things:
+>
+> - Sets the content view to be the layout with the [`ViewPager`](https://developer.android.com/reference/android/support/v4/view/ViewPager.html).
+> - Creates a class that extends the [`FragmentStatePagerAdapter`](https://developer.android.com/reference/android/support/v13/app/FragmentStatePagerAdapter.html) abstract class and implements the [`getItem()`](https://developer.android.com/reference/android/support/v4/app/FragmentStatePagerAdapter.html#getItem(int)) method to supply instances of `ScreenSlidePageFragment` as new pages. The pager adapter also requires that you implement the [`getCount()`](https://developer.android.com/reference/android/support/v4/view/PagerAdapter.html#getCount()) method, which returns the amount of pages the adapter will create (five in the example).
+> - Hooks up the [`PagerAdapter`](https://developer.android.com/reference/android/support/v4/view/PagerAdapter.html) to the [`ViewPager`](https://developer.android.com/reference/android/support/v4/view/ViewPager.html).
+> - Handles the device's back button by moving backwards in the virtual stack of fragments. If the user is already on the first page, go back on the activity back stack.
