@@ -103,3 +103,11 @@ view.setTranslationX(-1 * view.getWidth() * position);
 Learn how to animate between two views with a flipping motion.
 
 This lesson shows you how to do a card flip animation with custom fragment animations. Card flips animate between views of content by showing an animation that emulates a card flipping over.
+
+> **Create the Animators**
+>
+> Create the animations for the card flips. You'll need two animators for when the front of the card animates out and to the left and in and from the left. You'll also need two animators for when the back of the card animates in and from the right and out and to the right.
+>
+> **Create the Views**
+>
+> Each side of the "card" is a separate layout that can contain any content you want, such as two screens of text, two images, or any combination of views to flip between. You'll then use the two layouts in the fragments that you'll later animate. The following layouts create one side of a card that shows text, and the other side of the card that displays an [`ImageView`](https://developer.android.com/reference/android/widget/ImageView.html).
