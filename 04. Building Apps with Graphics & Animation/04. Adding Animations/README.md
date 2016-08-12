@@ -25,7 +25,7 @@ Crossfade animations (also know as dissolve) gradually fade out one UI component
 
 > **Create the Views**
 >
-> Create the two views that you want to crossfade. The following example creates a progress indicator and a scrollable text view
+> Create the two views that you want to crossfade. The following example creates a progress indicator and a scrollable text view.
 >
 > **Set up the Animation**
 >
@@ -49,3 +49,7 @@ Learn how to animate between horizontally adjacent screens with a sliding transi
 This lesson shows you how to do screen slides with a [`ViewPager`](https://developer.android.com/reference/android/support/v4/view/ViewPager.html) provided by the [support library](https://developer.android.com/topic/libraries/support-library/index.html). [`ViewPagers`](https://developer.android.com/reference/android/support/v4/view/ViewPager.html) can animate screen slides automatically.
 
 Screen slides are transitions between one entire screen to another and are common with UIs like setup wizards or slideshows.
+
+> **Create the Views**
+>
+> Create a layout file that you'll later use for the content of a fragment. The following example contains a text view to display some text.
