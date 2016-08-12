@@ -88,3 +88,13 @@ mPager.setPageTransformer(true, new ZoomOutPageTransformer());
 >> - Zoom-out page transformer
 >>
 >> This page transformer shrinks and fades pages when scrolling between adjacent pages. As a page gets closer to the center, it grows back to its normal size and fades in.
+>>
+>> - Depth page transformer
+>>
+>> This page transformer uses the default slide animation for sliding pages to the left, while using a "depth" animation for sliding pages to the right. This depth animation fades the page out, and scales it down linearly.
+>>
+>>> **Note:** During the depth animation, the default animation (a screen slide) still takes place, so you must counteract the screen slide with a negative X translation. For example:
+>>
+>> ```
+view.setTranslationX(-1 * view.getWidth() * position);
+```
