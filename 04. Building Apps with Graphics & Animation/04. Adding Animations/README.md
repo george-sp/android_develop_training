@@ -42,3 +42,10 @@ Crossfade animations (also know as dissolve) gradually fade out one UI component
 > 1. For the view that is fading in, set the alpha value to `0` and the visibility to [`VISIBLE`](https://developer.android.com/reference/android/view/View.html#VISIBLE). (Remember that it was initially set to [`GONE`](https://developer.android.com/reference/android/view/View.html#GONE).) This makes the view visible but completely transparent.
 > 2. For the view that is fading in, animate its alpha value from `0` to `1`. At the same time, for the view that is fading out, animate the alpha value from `1` to `0`.
 > 3. Using [`onAnimationEnd()`](https://developer.android.com/reference/android/animation/Animator.AnimatorListener.html#onAnimationEnd(android.animation.Animator)) in an [`Animator.AnimatorListener`](https://developer.android.com/reference/android/animation/Animator.AnimatorListener.html), set the visibility of the view that was fading out to [`GONE`](https://developer.android.com/reference/android/view/View.html#GONE). Even though the alpha value is `0`, setting the view's visibility to [`GONE`](https://developer.android.com/reference/android/view/View.html#GONE) prevents the view from taking up layout space and omits it from layout calculations, speeding up processing.
+
+#### Using ViewPager for Screen Slides
+Learn how to animate between horizontally adjacent screens with a sliding transition.
+
+This lesson shows you how to do screen slides with a [`ViewPager`](https://developer.android.com/reference/android/support/v4/view/ViewPager.html) provided by the [support library](https://developer.android.com/topic/libraries/support-library/index.html). [`ViewPagers`](https://developer.android.com/reference/android/support/v4/view/ViewPager.html) can animate screen slides automatically.
+
+Screen slides are transitions between one entire screen to another and are common with UIs like setup wizards or slideshows.
