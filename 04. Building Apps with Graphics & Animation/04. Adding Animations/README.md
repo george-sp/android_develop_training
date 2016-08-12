@@ -111,3 +111,7 @@ This lesson shows you how to do a card flip animation with custom fragment anima
 > **Create the Views**
 >
 > Each side of the "card" is a separate layout that can contain any content you want, such as two screens of text, two images, or any combination of views to flip between. You'll then use the two layouts in the fragments that you'll later animate. The following layouts create one side of a card that shows text, and the other side of the card that displays an [`ImageView`](https://developer.android.com/reference/android/widget/ImageView.html).
+>
+> **Create the Fragment**
+>
+> Create fragment classes for the front and back of the card. These classes return the layouts that you created previously in the [`onCreateView()`](https://developer.android.com/reference/android/app/Fragment.html#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)) method of each fragment. You can then create instances of this fragment in the parent activity where you want to show the card. The example shows nested fragment classes inside of the parent activity that uses them.

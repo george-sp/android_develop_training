@@ -17,6 +17,8 @@
         </activity>
         <activity android:name=".ScreenSlidePagerActivity">
         </activity>
+        <activity android:name=".CardFlipActivity">
+        </activity>
     </application>
 
 </manifest>
