@@ -154,3 +154,14 @@ Learn how to enable built-in animations when adding, removing, or updating child
 A layout animation is a pre-loaded animation that the system runs each time you make a change to the layout configuration. All you need to do is set an attribute in the layout to tell the Android system to animate these layout changes, and system-default animations are carried out for you.
 
 > **Tip:** If you want to supply custom layout animations, create a [`LayoutTransition`](https://developer.android.com/reference/android/animation/LayoutTransition.html) object and supply it to the layout with the [`setLayoutTransition()`](https://developer.android.com/reference/android/view/ViewGroup.html#setLayoutTransition(android.animation.LayoutTransition)) method.
+
+> **Create the Layout**
+>
+> In your activity's layout XML file, set the `android:animateLayoutChanges` attribute to `true` for the layout that you want to enable animations for. For instance:
+
+> ```
+<LinearLayout android:id="@+id/container"
+    android:animateLayoutChanges="true"
+    ...
+/>
+```

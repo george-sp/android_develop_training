@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Animations</string>
 
+    <!-- Actions -->
+    <string name="action_add_item">Add item</string>
+
+    <!-- Messages -->
+    <string name="message_empty_layout_changes">Add an item above to get started.</string>
+
     <!-- Accessibility-only descriptions -->
     <string name="description_image_1">Image 1</string>
     <string name="description_zoom_touch_close">Expanded image (touch to close)</string>
