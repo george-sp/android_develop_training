@@ -138,3 +138,13 @@ This lesson demonstrates how to do a touch-to-zoom animation, which is useful fo
 > **Set up the Zoom Animation**
 >
 > Once you apply your layout, set up the event handlers that trigger the zoom animation. The following example adds a [`View.OnClickListener`](https://developer.android.com/reference/android/view/View.OnClickListener.html) to the [`ImageButton`](https://developer.android.com/reference/android/widget/ImageButton.html) to execute the zoom animation when the user clicks the image button
+>
+> **Zoom the View**
+>
+> You'll now need to animate from the normal sized view to the zoomed view when appropriate. In general, you need to animate from the bounds of the normal-sized view to the bounds of the larger-sized view. The following method shows you how to implement a zoom animation that zooms from an image thumbnail to an enlarged view by doing the following things:
+>
+> 1. Assign the high-res image to the hidden "zoomed-in" (enlarged) [`ImageView`](https://developer.android.com/reference/android/widget/ImageView.html). The following example loads a large image resource on the UI thread for simplicity. You will want to do this loading in a separate thread to prevent blocking on the UI thread and then set the bitmap on the UI thread. Ideally, the bitmap should not be larger than the screen size.
+> 2. Calculate the starting and ending bounds for the [`ImageView`](https://developer.android.com/reference/android/widget/ImageView.html).
+> 3. Animate each of the four positioning and sizing properties [X](https://developer.android.com/reference/android/view/View.html#X), [Y](https://developer.android.com/reference/android/view/View.html#Y), ([SCALE_X](https://developer.android.com/reference/android/view/View.html#SCALE_X), and [SCALE_Y](https://developer.android.com/reference/android/view/View.html#SCALE_Y)) simultaneously, from the starting bounds to the ending bounds. These four animations are added to an [AnimatorSet](https://developer.android.com/reference/android/animation/AnimatorSet.html) so that they can be started at the same time.
+> 4. Zoom back out by running a similar animation but in reverse when the user touches the screen when the image is zoomed in. You can do this by adding a [View.OnClickListener](https://developer.android.com/reference/android/view/View.OnClickListener.html) to the [ImageView](https://developer.android.com/reference/android/widget/ImageView.html). When clicked, the [ImageView](https://developer.android.com/reference/android/widget/ImageView.html) minimizes back down to the size of the image thumbnail and sets its visibility to [GONE](https://developer.android.com/reference/android/view/View.html#GONE) to hide it.
+
