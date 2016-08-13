@@ -134,3 +134,7 @@ This lesson demonstrates how to do a touch-to-zoom animation, which is useful fo
 > **Create the Views**
 >
 > Create a layout file that contains the small and large version of the content that you want to zoom. Thia example creates an [`ImageButton`](https://developer.android.com/reference/android/widget/ImageButton.html) for clickable image thumbnail and an [`ImageView`](https://developer.android.com/reference/android/widget/ImageView.html) that displays the enlarged view of the image.
+>
+> **Set up the Zoom Animation**
+>
+> Once you apply your layout, set up the event handlers that trigger the zoom animation. The following example adds a [`View.OnClickListener`](https://developer.android.com/reference/android/view/View.OnClickListener.html) to the [`ImageButton`](https://developer.android.com/reference/android/widget/ImageButton.html) to execute the zoom animation when the user clicks the image button
