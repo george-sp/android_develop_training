@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    This layout definition contains a text field and a child layout for the scene root.
+    The layout for the first scene is included in the main layout file.
+    This allows the app to display it as part of the initial user interface and
+    also to load it into a scene,
+    since the framework can load only a whole layout file into a scene.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/master_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".BasicTransitionActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Hello Title!"
+        android:textSize="25sp"/>
+
+    <FrameLayout
+        android:id="@+id/scene_root"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <include layout="@layout/a_scene"/>
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/fade_transition_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:onClick="applyFadeTransition"
+        android:text="Fade Transition"
+        android:textSize="25sp"/>
+
+    <Button
+        android:id="@+id/multiple_transitions_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:onClick="applyMultipleTransitions"
+        android:text="Multiple Transitions"
+        android:textSize="25sp"/>
+</LinearLayout>
