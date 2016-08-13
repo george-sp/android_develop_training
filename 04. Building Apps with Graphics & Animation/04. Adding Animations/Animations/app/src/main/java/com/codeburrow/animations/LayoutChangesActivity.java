@@ -1,7 +1,7 @@
 package com.codeburrow.animations;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class LayoutChangesActivity extends AppCompatActivity {
+public class LayoutChangesActivity extends Activity {
 
     private static final String LOG_TAG = LayoutChangesActivity.class.getSimpleName();
 
@@ -37,7 +37,7 @@ public class LayoutChangesActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.activity_layout_changes, menu);
+        getMenuInflater().inflate(R.menu.menu_layout_changes, menu);
         return true;
     }
 

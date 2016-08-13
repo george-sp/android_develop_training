@@ -1,9 +1,21 @@
 <resources>
+
+    <!-- Titles -->
     <string name="app_name">Animations</string>
+    <string name="title_crossfade">Simple Crossfade</string>
+    <string name="title_card_flip">Card Flip</string>
+    <string name="title_screen_slide">Screen Slide</string>
+    <string name="title_zoom">Zoom</string>
+    <string name="title_layout_changes">Layout Changes</string>
 
     <!-- Actions -->
+    <string name="action_toggle">Toggle indicator</string>
     <string name="action_add_item">Add item</string>
     <string name="action_remove_item">Remove item</string>
+    <string name="action_info">Photo info</string>
+    <string name="action_photo">View photo</string>
+    <string name="action_zoom_out_transformer">Zoom Out</string>
+    <string name="action_depth_transformer">Depth</string>
 
     <!-- Messages -->
     <string name="message_empty_layout_changes">Add an item above to get started.</string>

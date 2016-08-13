@@ -15,6 +15,9 @@ public class ScreenSlidePageFragment extends Fragment {
 
     private static final String LOG_TAG = ScreenSlidePageFragment.class.getSimpleName();
 
+    public ScreenSlidePageFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_screen_slide_page, container, false);

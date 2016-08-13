@@ -1,13 +1,24 @@
 package com.codeburrow.animations;
 
-import android.os.Bundle;
+import android.app.Activity;
 import android.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class CardFlipActivity extends AppCompatActivity {
+/**
+ * This sample shows an "info" action bar button that shows the back of a "card",
+ * rotating the front of the card out and the back of the card in.
+ * The reverse animation is played when the user presses the system Back button or
+ * the "photo" action bar button.
+ */
+public class CardFlipActivity extends Activity implements FragmentManager.OnBackStackChangedListener {
 
     private static final String LOG_TAG = CardFlipActivity.class.getSimpleName();
 
@@ -22,13 +33,56 @@ public class CardFlipActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card_flip);
 
         if (savedInstanceState == null) {
+            // If there is no saved instance state,
+            // add a fragment representing the front of the card to this activity.
+            // If there is saved instance state,
+            // this fragment will have already been added to the activity.
             getFragmentManager()
                     .beginTransaction()
                     .add(R.id.container, new CardFrontFragment())
                     .commit();
+        } else {
+            mShowingBack = (getFragmentManager().getBackStackEntryCount() > 0);
         }
 
-        flipCard();
+        // Monitor back stack changes to ensure the action bar shows the appropriate button
+        // (either "photo" or "info").
+        getFragmentManager().addOnBackStackChangedListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        // Add either a "photo" or "finish" button to the action bar,
+        // depending on which page is currently selected.
+        MenuItem item = menu.add(Menu.NONE, R.id.action_flip, Menu.NONE, mShowingBack ? R.string.action_photo : R.string.action_info);
+        item.setIcon(mShowingBack ? R.drawable.ic_action_photo : R.drawable.ic_action_info);
+        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // Navigate "up" the demo structure to the launchpad activity.
+                NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
+                return true;
+            case R.id.action_flip:
+                flipCard();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        mShowingBack = (getFragmentManager().getBackStackEntryCount() > 0);
+
+        // When the back stack changes, invalidate the options menu (action bar).
+        invalidateOptionsMenu();
     }
 
     /**

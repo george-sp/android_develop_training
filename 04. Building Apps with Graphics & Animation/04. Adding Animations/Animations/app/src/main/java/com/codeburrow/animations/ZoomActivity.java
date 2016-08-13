@@ -4,15 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
-public class ZoomActivity extends AppCompatActivity {
+public class ZoomActivity extends Activity {
 
     private static final String LOG_TAG = ZoomActivity.class.getSimpleName();
 
