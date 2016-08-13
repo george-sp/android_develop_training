@@ -165,3 +165,17 @@ A layout animation is a pre-loaded animation that the system runs each time you 
     ...
 />
 ```
+>
+> **Add, Update, or Remove Items from the Layout**
+>
+> Now, all you need to do is add, remove, or update items in the layout and the items are animated automatically:
+>
+> ```
+private ViewGroup mContainerView;
+...
+private void addItem() {
+    View newView;
+    ...
+    mContainerView.addView(newView, 0);
+}
+```
