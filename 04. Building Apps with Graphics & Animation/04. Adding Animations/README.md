@@ -125,3 +125,8 @@ This lesson shows you how to do a card flip animation with custom fragment anima
 > - Sets the custom animations that you created earlier for the fragment transitions.
 > - Replaces the currently displayed fragment with a new fragment and animates this event with the custom animations that you created.
 > - Adds the previously displayed fragment to the fragment back stack so when the user presses the _Back_ button, the card flips back over.
+
+#### Zooming a View
+Learn how to enlarge views with a touch-to-zoom animation.
+
+This lesson demonstrates how to do a touch-to-zoom animation, which is useful for apps such as photo galleries to animate a view from a thumbnail to a full-size image that fills the screen.
