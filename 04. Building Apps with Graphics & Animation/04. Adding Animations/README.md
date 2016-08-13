@@ -130,3 +130,7 @@ This lesson shows you how to do a card flip animation with custom fragment anima
 Learn how to enlarge views with a touch-to-zoom animation.
 
 This lesson demonstrates how to do a touch-to-zoom animation, which is useful for apps such as photo galleries to animate a view from a thumbnail to a full-size image that fills the screen.
+
+> **Create the Views**
+>
+> Create a layout file that contains the small and large version of the content that you want to zoom. Thia example creates an [`ImageButton`](https://developer.android.com/reference/android/widget/ImageButton.html) for clickable image thumbnail and an [`ImageView`](https://developer.android.com/reference/android/widget/ImageView.html) that displays the enlarged view of the image.
