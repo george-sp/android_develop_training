@@ -115,3 +115,13 @@ This lesson shows you how to do a card flip animation with custom fragment anima
 > **Create the Fragment**
 >
 > Create fragment classes for the front and back of the card. These classes return the layouts that you created previously in the [`onCreateView()`](https://developer.android.com/reference/android/app/Fragment.html#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)) method of each fragment. You can then create instances of this fragment in the parent activity where you want to show the card. The example shows nested fragment classes inside of the parent activity that uses them.
+>
+> **Animate the Card Flip**
+>
+> Now, you'll need to display the fragments inside of a parent activity. To do this, first create the layout for your activity. The example creates a [`FrameLayout`](https://developer.android.com/reference/android/widget/FrameLayout.html) that you can add fragments to at runtime.
+> In the activity code, set the content view to be the layout that you just created. It's also good idea to show a default fragment when the activity is created, so the example activity shows you how to display the front of the card by default.
+> Now that you have the front of the card showing, you can show the back of the card with the flip animation at an appropriate time. Create a method to show the other side of the card that does the following things:
+>
+> - Sets the custom animations that you created earlier for the fragment transitions.
+> - Replaces the currently displayed fragment with a new fragment and animates this event with the custom animations that you created.
+> - Adds the previously displayed fragment to the fragment back stack so when the user presses the _Back_ button, the card flips back over.
