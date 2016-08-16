@@ -20,7 +20,7 @@ Video
 -----------------------------------------------------------
 
 #### The Transitions Framework
-Learn the main features and components of the transitions framework.
+- Learn the main features and components of the transitions framework.
 
 Animating your app's user interface provides more than just visual appeal. Animations highlight changes and provide visual cues that help users learn how your app works.
 
@@ -86,7 +86,7 @@ The framework has the following features:
 > 4. If you try to resize a [`TextView`](https://developer.android.com/reference/android/widget/TextView.html) with an animation, the text will pop to a new location before the object has completely resized. To avoid this problem, do not animate the resizing of views that contain text.
 
 #### Creating a Scene
-Learn how to create a scene to store the state of a view hierarchy.
+- Learn how to create a scene to store the state of a view hierarchy.
 
 This lesson shows you how to create scenes in your app and how to define scene actions. The next lesson shows you how to transition between two scenes.
 
@@ -136,7 +136,7 @@ Scenes store the state of a view hierarchy, including all its views and their pr
 >> **Note:** Do not use scene actions to pass data between views in the starting and ending scenes. For more information, see [Defining Transition Lifecycle Callbacks](https://developer.android.com/training/transitions/transitions.html#Callbacks).
 
 #### Applying a Transition
-Learn how to apply a transition between two scenes of a view hierarchy.
+- Learn how to apply a transition between two scenes of a view hierarchy.
 
 This lesson teaches you run an animation between two scenes using built-in transitions to move, resize, and fade views. The next lesson shows you how to define custom transitions.
 
@@ -223,7 +223,7 @@ In the transitions framework, animations create a series of frames that depict a
 > For more information, see the API reference for the [`TransitionListener`](https://developer.android.com/reference/android/transition/Transition.TransitionListener.html) class.
 
 #### Creating Custom Transitions
-Learn how to create other animation effects not included in the transitions framework.
+- Learn how to create other animation effects not included in the transitions framework.
 
 This lesson teaches you to capture property values and generate animations to create custom transitions.
 
