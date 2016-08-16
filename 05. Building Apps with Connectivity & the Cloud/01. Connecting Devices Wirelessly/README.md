@@ -80,3 +80,13 @@ public void initializeServerSocket() {
 > When your application finds a service on the network to connect to, it must first determine the connection information for that service, using the [`resolveService()`](https://developer.android.com/reference/android/net/nsd/NsdManager.html#resolveService(android.net.nsd.NsdServiceInfo, android.net.nsd.NsdManager.ResolveListener)) method. Implement a [`NsdManager.ResolveListener`](https://developer.android.com/reference/android/net/nsd/NsdManager.ResolveListener.html) to pass into this method, and use it to get a [`NsdServiceInfo`](https://developer.android.com/reference/android/net/nsd/NsdServiceInfo.html) containing the connection information.
 >
 > Once the service is resolved, your application receives detailed service information including an IP address and port number. This is everything you need to create your own network connection to the service.
+>
+> - **Unregister Your Service on Application Close**
+>
+> It's important to enable and disable NSD functionality as appropriate during the application's lifecycle. 
+>
+> Unregistering your application when it closes down helps prevent other applications from thinking it's still active and attempting to connect to it.
+>
+> Also, service discovery is an expensive operation, and should be stopped when the parent Activity is paused, and re-enabled when the Activity is resumed. 
+>
+> Override the lifecycle methods of your main Activity and insert code to start and stop service broadcast and discovery as appropriate.
