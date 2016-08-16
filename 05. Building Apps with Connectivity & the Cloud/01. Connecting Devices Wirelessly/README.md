@@ -15,3 +15,14 @@ You should also read
 
 Video
 - [DevBytes: Network Service Discovery](https://developer.android.com/training/connect-devices-wirelessly/index.html)
+
+-----------------------------------------------------------
+
+#### Using Network Service Discovery
+- Learn how to broadcast services offered by your own application, discover services offered on the local network, and use NSD to determine the connection details for the service you wish to connect to.
+
+This lesson shows you how to build an application that can broadcast its name and connection information to the local network and scan for information from other applications doing the same. 
+Finally, this lesson shows you how to connect to the same application running on another device.
+
+Adding **Network Service Discovery (NSD)** to your app allows your users to identify other devices on the local network that support the services your app requests. This is useful for a variety of peer-to-peer applications such as file sharing or multi-player gaming. Android's NSD APIs simplify the effort required for you to implement such features.
+
