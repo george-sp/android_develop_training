@@ -74,3 +74,9 @@ public void initializeServerSocket() {
     mNsdManager.discoverServices(
         SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
 ```
+>
+> - **Connect to Services on the Network**
+>
+> When your application finds a service on the network to connect to, it must first determine the connection information for that service, using the [`resolveService()`](https://developer.android.com/reference/android/net/nsd/NsdManager.html#resolveService(android.net.nsd.NsdServiceInfo, android.net.nsd.NsdManager.ResolveListener)) method. Implement a [`NsdManager.ResolveListener`](https://developer.android.com/reference/android/net/nsd/NsdManager.ResolveListener.html) to pass into this method, and use it to get a [`NsdServiceInfo`](https://developer.android.com/reference/android/net/nsd/NsdServiceInfo.html) containing the connection information.
+>
+> Once the service is resolved, your application receives detailed service information including an IP address and port number. This is everything you need to create your own network connection to the service.
