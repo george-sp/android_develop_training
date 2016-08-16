@@ -52,3 +52,25 @@ public void initializeServerSocket() {
 > Now you have all the pieces to register your service. Call the method [`registerService()`](https://developer.android.com/reference/android/net/nsd/NsdManager.html#registerService(android.net.nsd.NsdServiceInfo, int, android.net.nsd.NsdManager.RegistrationListener)).
 >
 > Note that this method is asynchronous, so any code that needs to run after the service has been registered must go in the [`onServiceRegistered()`](https://developer.android.com/reference/android/net/nsd/NsdManager.RegistrationListener.html#onServiceRegistered(android.net.nsd.NsdServiceInfo)) method.
+>
+> - **Discover Services on the Network**
+>
+> Your application needs to listen to service broadcasts on the network to see what services are available, and filter out anything the application can't work with.
+>
+> Service discovery, like service registration, has two steps: setting up a discovery listener with the relevant callbacks, and making a single asynchronous API call to [`discoverServices()`](https://developer.android.com/reference/android/net/nsd/NsdManager.html#discoverServices(java.lang.String, int, android.net.nsd.NsdManager.DiscoveryListener)).
+>
+> First, instantiate an anonymous class that implements [`NsdManager.DiscoveryListener`](https://developer.android.com/reference/android/net/nsd/NsdManager.DiscoveryListener.html). 
+>
+> The NSD API uses the methods in this interface to inform your application when discovery is started, when it fails, and when services are found and lost (lost means "is no longer available"). Notice that this snippet does several checks when a service is found.
+>
+> 1. The service name of the found service is compared to the service name of the local service to determine if the device just picked up its own broadcast (which is valid).
+> 2. The service type is checked, to verify it's a type of service your application can connect to.
+> 3. The service name is checked to verify connection to the correct application.
+>
+> Checking the service name isn't always necessary, and is only relevant if you want to connect to a specific application. For instance, the application might only want to connect to instances of itself running on other devices. However, if the application wants to connect to a network printer, it's enough to see that the service type is "_ipp._tcp".
+>
+> After setting up the listener, call [`discoverServices()`](https://developer.android.com/reference/android/net/nsd/NsdManager.html#discoverServices(java.lang.String, int, android.net.nsd.NsdManager.DiscoveryListener)), passing in the service type your application should look for, the discovery protocol to use, and the listener you just created.
+> ```
+    mNsdManager.discoverServices(
+        SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
+```
