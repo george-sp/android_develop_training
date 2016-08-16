@@ -19,7 +19,7 @@ You should also read
 -----------------------------------------------------------
 
 #### Crossfading Two Views
-Learn how to crossfade between two overlapping views. This lesson shows you how to crossfade a progress indicator to a view that contains text content.
+- Learn how to crossfade between two overlapping views. This lesson shows you how to crossfade a progress indicator to a view that contains text content.
 
 Crossfade animations (also know as dissolve) gradually fade out one UI component while simultaneously fading in another. This animation is useful for situations where you want to switch content or views in your app. Crossfades are very subtle and short but offer a fluid transition from one screen to the next. When you don't use them, however, transitions often feel abrupt or hurried.
 
@@ -44,7 +44,7 @@ Crossfade animations (also know as dissolve) gradually fade out one UI component
 > 3. Using [`onAnimationEnd()`](https://developer.android.com/reference/android/animation/Animator.AnimatorListener.html#onAnimationEnd(android.animation.Animator)) in an [`Animator.AnimatorListener`](https://developer.android.com/reference/android/animation/Animator.AnimatorListener.html), set the visibility of the view that was fading out to [`GONE`](https://developer.android.com/reference/android/view/View.html#GONE). Even though the alpha value is `0`, setting the view's visibility to [`GONE`](https://developer.android.com/reference/android/view/View.html#GONE) prevents the view from taking up layout space and omits it from layout calculations, speeding up processing.
 
 #### Using ViewPager for Screen Slides
-Learn how to animate between horizontally adjacent screens with a sliding transition.
+- Learn how to animate between horizontally adjacent screens with a sliding transition.
 
 This lesson shows you how to do screen slides with a [`ViewPager`](https://developer.android.com/reference/android/support/v4/view/ViewPager.html) provided by the [support library](https://developer.android.com/topic/libraries/support-library/index.html). [`ViewPagers`](https://developer.android.com/reference/android/support/v4/view/ViewPager.html) can animate screen slides automatically.
 
@@ -100,7 +100,7 @@ view.setTranslationX(-1 * view.getWidth() * position);
 ```
 
 #### Displaying Card Flip Animations
-Learn how to animate between two views with a flipping motion.
+- Learn how to animate between two views with a flipping motion.
 
 This lesson shows you how to do a card flip animation with custom fragment animations. Card flips animate between views of content by showing an animation that emulates a card flipping over.
 
@@ -127,7 +127,7 @@ This lesson shows you how to do a card flip animation with custom fragment anima
 > - Adds the previously displayed fragment to the fragment back stack so when the user presses the _Back_ button, the card flips back over.
 
 #### Zooming a View
-Learn how to enlarge views with a touch-to-zoom animation.
+- Learn how to enlarge views with a touch-to-zoom animation.
 
 This lesson demonstrates how to do a touch-to-zoom animation, which is useful for apps such as photo galleries to animate a view from a thumbnail to a full-size image that fills the screen.
 
@@ -149,7 +149,7 @@ This lesson demonstrates how to do a touch-to-zoom animation, which is useful fo
 > 4. Zoom back out by running a similar animation but in reverse when the user touches the screen when the image is zoomed in. You can do this by adding a [View.OnClickListener](https://developer.android.com/reference/android/view/View.OnClickListener.html) to the [ImageView](https://developer.android.com/reference/android/widget/ImageView.html). When clicked, the [ImageView](https://developer.android.com/reference/android/widget/ImageView.html) minimizes back down to the size of the image thumbnail and sets its visibility to [GONE](https://developer.android.com/reference/android/view/View.html#GONE) to hide it.
 
 #### Animating Layout Changes
-Learn how to enable built-in animations when adding, removing, or updating child views in a layout.
+- Learn how to enable built-in animations when adding, removing, or updating child views in a layout.
 
 A layout animation is a pre-loaded animation that the system runs each time you make a change to the layout configuration. All you need to do is set an attribute in the layout to tell the Android system to animate these layout changes, and system-default animations are carried out for you.
 

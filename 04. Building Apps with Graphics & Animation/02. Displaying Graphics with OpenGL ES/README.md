@@ -34,21 +34,21 @@ For more information about these classes, see the [OpenGL ES](https://developer.
 _GLSurfaceView is just one way to incorporate OpenGL ES graphics into your application. For a full-screen or near-full screen graphics view, it is a reasonable choice. Developers who want to incorporate OpenGL ES graphics in a small portion of their layouts should take a look at TextureView. For real, do-it-yourself developers, it is also possible to build up an OpenGL ES view using SurfaceView, but this requires writing quite a bit of additional code._
 
 #### Defining Shapes
-Learn how to define shapes and why you need to know about faces and winding.
+- Learn how to define shapes and why you need to know about faces and winding.
 
 This lesson explains the OpenGL ES coordinate system relative to an Android device screen, the basics of defining a shape, shape faces, as well as defining a triangle and a square.
 
 Being able to define shapes to be drawn in the context of an OpenGL ES view is the first step in creating your high-end graphics masterpiece. Drawing with OpenGL ES can be a little tricky without knowing a few basic things about how OpenGL ES expects you to define graphic objects.
 
 #### Drawing Shapes
-Learn how to draw OpenGL shapes in your application.
+- Learn how to draw OpenGL shapes in your application.
 
 This lesson explains how to draw the shapes you defined in the previous lesson using the OpenGL ES 2.0 API.
 
 After you define shapes to be drawn with OpenGL, you probably want to draw them. Drawing shapes with the OpenGL ES 2.0 takes a bit more code than you might imagine, because the API provides a great deal of control over the graphics rendering pipeline.
 
 #### Applying Projection and Camera Views
-Learn how to use projection and camera views to get a new perspective on your drawn objects.
+- Learn how to use projection and camera views to get a new perspective on your drawn objects.
 
 This lesson describes how to create a projection and camera view and apply it to shapes drawn in your GLSurfaceView.
 
@@ -57,14 +57,14 @@ In the OpenGL ES environment, projection and camera views allow you to display d
 - _**Camera View** - This transformation adjusts the coordinates of drawn objects based on a virtual camera position. It’s important to note that OpenGL ES does not define an actual camera object, but instead provides utility methods that simulate a camera by transforming the display of drawn objects. A camera view transformation might be calculated only once when you establish your [GLSurfaceView](https://developer.android.com/reference/android/opengl/GLSurfaceView.html), or might change dynamically based on user actions or your application’s function._
 
 #### Adding Motion
-Learn how to do basic movement and animation of drawn objects with OpenGL.
+- Learn how to do basic movement and animation of drawn objects with OpenGL.
 
 This lesson explains how to add motion to a shape with rotation.
 
 Drawing objects on screen is a pretty basic feature of OpenGL, but you can do this with other Android graphics framwork classes, including [Canvas](https://developer.android.com/reference/android/graphics/Canvas.html) and [Drawable](https://developer.android.com/reference/android/graphics/drawable/Drawable.html) objects. OpenGL ES provides additional capabilities for moving and transforming drawn objects in three dimensions or in other unique ways to create compelling user experiences.
 
 #### Responding to Touch Events
-Learn how to do basic interaction with OpenGL graphics.
+- Learn how to do basic interaction with OpenGL graphics.
 
 This lesson shows you how to listen for touch events to let users rotate an OpenGL ES object.
 
