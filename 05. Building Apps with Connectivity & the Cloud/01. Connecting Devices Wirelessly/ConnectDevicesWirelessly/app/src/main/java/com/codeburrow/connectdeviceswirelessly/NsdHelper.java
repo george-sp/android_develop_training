@@ -47,6 +47,9 @@ public class NsdHelper {
      * @param port
      */
     public void registerService(int port) {
+        // Cancel any previous registration request
+        tearDown();
+        initializeRegistrationListener();
         // Create the NsdServiceInfo object, and populate it.
         NsdServiceInfo serviceInfo = new NsdServiceInfo();
         // The name is subject to change based on conflicts
@@ -59,23 +62,41 @@ public class NsdHelper {
     }
 
     public void discoverServices() {
+        // Cancel any existing discovery request
+        stopDiscovery();
+        initializeDiscoveryListener();
         mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
     }
 
     public void stopDiscovery() {
-        mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+        if (mDiscoveryListener != null) {
+            try {
+                mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+            } finally {
+                mDiscoveryListener = null;
+            }
+        }
     }
 
     public void tearDown() {
-        mNsdManager.unregisterService(mRegistrationListener);
+        if (mRegistrationListener != null) {
+            try {
+                mNsdManager.unregisterService(mRegistrationListener);
+            } finally {
+                mRegistrationListener = null;
+            }
+        }
     }
 
     public NsdServiceInfo getChosenServiceInfo() {
         return mNsdServiceInfo;
     }
 
+    public void initializeNsd() {
+        initializeResolveListener();
 
-
+        //mNsdManager.inti(mContext.getMainLooper(), this);
+    }
 
     public void initializeRegistrationListener() {
         mRegistrationListener = new NsdManager.RegistrationListener() {
@@ -104,14 +125,6 @@ public class NsdHelper {
                 // Unregistration failed.  Put debugging code here to determine why.
             }
         };
-    }
-
-    public void initializeNsd() {
-        initializeResolveListener();
-        initializeDiscoveryListener();
-        initializeRegistrationListener();
-
-        //mNsdManager.inti(mContext.getMainLooper(), this);
     }
 
     public void initializeDiscoveryListener() {
