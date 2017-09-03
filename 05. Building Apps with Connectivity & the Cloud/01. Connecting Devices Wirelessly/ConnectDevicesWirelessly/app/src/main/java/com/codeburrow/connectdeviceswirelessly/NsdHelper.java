@@ -5,9 +5,7 @@ import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
 import android.util.Log;
 
-import java.io.IOException;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 
 public class NsdHelper {
 
@@ -20,12 +18,14 @@ public class NsdHelper {
     NsdManager.DiscoveryListener mDiscoveryListener;
 
     public static final String SERVICE_TYPE = "_http._tcp.";
-    public String mServiceName;
-    private ServerSocket mServerSocket;
+    public String mServiceName = "NsdChat";
     private int mLocalPort;
+
+    NsdServiceInfo mNsdServiceInfo;
 
     public NsdHelper(Context context) {
         mContext = context;
+        mNsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
     }
 
     /**
@@ -51,24 +51,31 @@ public class NsdHelper {
         NsdServiceInfo serviceInfo = new NsdServiceInfo();
         // The name is subject to change based on conflicts
         // with other services advertised on the same network.
-        serviceInfo.setServiceName("NsdChat");
-        serviceInfo.setServiceType("_http._tcp.");
+        serviceInfo.setServiceName(mServiceName);
+        serviceInfo.setServiceType(SERVICE_TYPE);
         serviceInfo.setPort(port);
-
-        mNsdManager = (NsdManager) mContext.getSystemService(Context.NSD_SERVICE);
 
         mNsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, mRegistrationListener);
     }
 
-    public void initializeServerSocket() throws IOException {
-        // Initialize a server socket on the next available port.
-        mServerSocket = new ServerSocket(0);
-
-        // Store the chosen port.
-        mLocalPort = mServerSocket.getLocalPort();
-
-        // ...
+    public void discoverServices() {
+        mNsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
     }
+
+    public void stopDiscovery() {
+        mNsdManager.stopServiceDiscovery(mDiscoveryListener);
+    }
+
+    public void tearDown() {
+        mNsdManager.unregisterService(mRegistrationListener);
+    }
+
+    public NsdServiceInfo getChosenServiceInfo() {
+        return mNsdServiceInfo;
+    }
+
+
+
 
     public void initializeRegistrationListener() {
         mRegistrationListener = new NsdManager.RegistrationListener() {
@@ -97,6 +104,14 @@ public class NsdHelper {
                 // Unregistration failed.  Put debugging code here to determine why.
             }
         };
+    }
+
+    public void initializeNsd() {
+        initializeResolveListener();
+        initializeDiscoveryListener();
+        initializeRegistrationListener();
+
+        //mNsdManager.inti(mContext.getMainLooper(), this);
     }
 
     public void initializeDiscoveryListener() {
@@ -153,11 +168,6 @@ public class NsdHelper {
         };
     }
 
-    public void discoverServices() {
-        mNsdManager.discoverServices(
-                SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, mDiscoveryListener);
-    }
-
     public void initializeResolveListener() {
         mResolveListener = new NsdManager.ResolveListener() {
 
@@ -175,9 +185,9 @@ public class NsdHelper {
                     Log.d(LOG_TAG, "Same IP.");
                     return;
                 }
-                mService = serviceInfo;
-                int port = mService.getPort();
-                InetAddress host = mService.getHost();
+                mNsdServiceInfo = serviceInfo;
+                int port = mNsdServiceInfo.getPort();
+                InetAddress host = mNsdServiceInfo.getHost();
             }
         };
     }
