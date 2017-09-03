@@ -1,5 +1,6 @@
 package com.codeburrow.connectdeviceswirelessly;
 
+import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,8 +46,18 @@ public class NsdChatActivity extends AppCompatActivity {
         }
     }
 
-    public void clickDiscover(View v) {
+    public void clickDiscover(View view) {
         mNsdHelper.discoverServices();
+    }
+
+    public void clickConnect(View view) {
+        NsdServiceInfo serviceInfo = mNsdHelper.getChosenServiceInfo();
+        if (serviceInfo != null) {
+            Log.d(LOG_TAG, "Connecting.");
+            mConnection.connectToServer(serviceInfo.getHost(), serviceInfo.getPort());
+        } else {
+            Log.d(LOG_TAG, "No service to connect to!");
+        }
     }
 
     public void clickSend(View view) {
